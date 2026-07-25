@@ -60,6 +60,28 @@ export function viceGeneralIds(player) {
   return player.viceMarshalIndices.map((idx) => player.camp[idx]?.generalId).filter(Boolean);
 }
 
+/** All general IDs whose ability is currently "live" for this player: their
+ * actual Marshal, plus — if that Marshal is Yo Jin (g4, whose own ∞ ability
+ * IS the grant itself, continuously, no activation needed) — every one of
+ * their Vice-Marshals too. Trigger/passive abilities gained this way fire
+ * automatically just like the Marshal's own; only action-type ones still
+ * need a deliberate button press (see abilities.js performGeneralAbilityAction),
+ * because "action" inherently means "something you choose to do". */
+export function effectiveGeneralIds(player) {
+  const marshalId = activeGeneralId(player);
+  const ids = marshalId ? [marshalId] : [];
+  if (marshalId === 'g4') {
+    for (const vgid of viceGeneralIds(player)) {
+      if (!ids.includes(vgid)) ids.push(vgid);
+    }
+  }
+  return ids;
+}
+
+export function hasActiveAbility(player, generalId) {
+  return effectiveGeneralIds(player).includes(generalId);
+}
+
 /** Safely removes a camp slot (e.g. a demoted Vice-Marshal), fixing up
  * marshalIndex/viceMarshalIndices so they still point at the right entries. */
 export function removeCampEntry(player, campIndex) {

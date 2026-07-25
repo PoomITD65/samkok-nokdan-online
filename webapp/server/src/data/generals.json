@@ -32,8 +32,7 @@
     "nameEn": "He Jin",
     "image": "/assets/cards/generals/g4.jpg",
     "icon": "continuous",
-    "actionSlotEligible": true,
-    "_iconNote": "Confirmed continuous (∞) from a clear photo. The ability is still invoked via the 'general_ability' action slot in-game — the ∞ icon here means the PERMISSION to borrow a Vice-Marshal's ability is passive/always available, not that it fires automatically without being chosen. (actionSlotEligible is the flag the code actually checks, decoupled from the display icon.)",
+    "_iconNote": "Confirmed continuous (∞) from a clear photo. The grant itself is fully passive: any trigger/continuous ability among his Vice-Marshals now fires automatically, no button needed (see effectiveGeneralIds in state.js). Only an action-type Vice-Marshal ability still needs the 'general ability' button — pressing 'action' is inherent to what that type means, not something Yo Jin's own icon overrides. isActionAbilityAvailable() special-cases g4 to check his Vice-Marshals instead of using a static flag here.",
     "text": "เราสามารถใช้ความสามารถของรองแม่ทัพตัวใดก็ได้ของเรา (ความสามารถนี้ใช้ได้เฉพาะตาเราเท่านั้น)",
     "textEn": "We may use the ability of any Vice-Marshal general in our camp (only on our own turn)."
   },

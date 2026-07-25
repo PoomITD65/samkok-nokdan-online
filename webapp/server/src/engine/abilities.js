@@ -1,6 +1,8 @@
 import {
   activeGeneralId,
   viceGeneralIds,
+  effectiveGeneralIds,
+  hasActiveAbility,
   drawCards,
   discardFromHand,
   log,
@@ -26,16 +28,16 @@ import { loseInfantry, performAttack } from './combat.js';
 // ---------------------------------------------------------------------------
 export const continuousChecks = {
   freeAttackAllowed(ctx, attacker, target) {
-    return activeGeneralId(attacker) === 'g11' && target.camp.length <= 2;
+    return hasActiveAbility(attacker, 'g11') && target.camp.length <= 2;
   },
   infantryAttackBlocked(ctx, target) {
-    return activeGeneralId(target) === 'g18';
+    return hasActiveAbility(target, 'g18');
   },
   anyCardAsAttackFuel(ctx, attacker) {
-    return activeGeneralId(attacker) === 'g2';
+    return hasActiveAbility(attacker, 'g2');
   },
   trickBlockedForTarget(ctx, target, sourcePlayer) {
-    return activeGeneralId(target) === 'g5' && (!sourcePlayer || sourcePlayer.id !== target.id);
+    return hasActiveAbility(target, 'g5') && (!sourcePlayer || sourcePlayer.id !== target.id);
   }
 };
 
@@ -74,14 +76,17 @@ function hook_g10_luozhi(ctx, attacker, defender) {
 const onAttackedHooks = { g8: hook_g8_diaochan, g10: hook_g10_luozhi };
 
 export async function fireOnAttacked(ctx, attacker, defender) {
-  const gid = activeGeneralId(defender);
-  const hook = onAttackedHooks[gid];
-  if (!hook) return {};
-  try {
-    return (await hook(ctx, attacker, defender)) || {};
-  } catch {
-    return {};
+  let merged = {};
+  for (const gid of effectiveGeneralIds(defender)) {
+    const hook = onAttackedHooks[gid];
+    if (!hook) continue;
+    try {
+      merged = { ...merged, ...((await hook(ctx, attacker, defender)) || {}) };
+    } catch {
+      // ignore and keep whatever was already merged
+    }
   }
+  return merged;
 }
 
 // ---------------------------------------------------------------------------
@@ -183,13 +188,14 @@ const onAttackSuccessHooks = {
 };
 
 export async function fireOnAttackSuccess(ctx, attacker, defender, meta = {}) {
-  const gid = activeGeneralId(attacker);
-  const hook = onAttackSuccessHooks[gid];
-  if (!hook) return;
-  try {
-    await hook(ctx, attacker, defender, meta);
-  } catch (e) {
-    log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+  for (const gid of effectiveGeneralIds(attacker)) {
+    const hook = onAttackSuccessHooks[gid];
+    if (!hook) continue;
+    try {
+      await hook(ctx, attacker, defender, meta);
+    } catch (e) {
+      log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+    }
   }
 }
 
@@ -216,13 +222,14 @@ async function hook_g15_xiahoudun(ctx, defender, attacker) {
 const onInfantryLostFromAttackHooks = { g15: hook_g15_xiahoudun };
 
 export async function fireOnInfantryLostFromAttack(ctx, defender, attacker) {
-  const gid = activeGeneralId(defender);
-  const hook = onInfantryLostFromAttackHooks[gid];
-  if (!hook) return;
-  try {
-    await hook(ctx, defender, attacker);
-  } catch (e) {
-    log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+  for (const gid of effectiveGeneralIds(defender)) {
+    const hook = onInfantryLostFromAttackHooks[gid];
+    if (!hook) continue;
+    try {
+      await hook(ctx, defender, attacker);
+    } catch (e) {
+      log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+    }
   }
 }
 
@@ -239,13 +246,14 @@ async function hook_g25_sunquan_anyloss(ctx, player) {
 const onAnyInfantryLossHooks = { g25: hook_g25_sunquan_anyloss };
 
 export async function fireOnAnyInfantryLoss(ctx, player) {
-  const gid = activeGeneralId(player);
-  const hook = onAnyInfantryLossHooks[gid];
-  if (!hook) return;
-  try {
-    await hook(ctx, player);
-  } catch (e) {
-    log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+  for (const gid of effectiveGeneralIds(player)) {
+    const hook = onAnyInfantryLossHooks[gid];
+    if (!hook) continue;
+    try {
+      await hook(ctx, player);
+    } catch (e) {
+      log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+    }
   }
 }
 
@@ -255,7 +263,7 @@ export async function fireOnAnyInfantryLoss(ctx, player) {
 // ---------------------------------------------------------------------------
 export async function fireOnAnyCardUse(ctx, actingPlayer) {
   const { room } = ctx;
-  const watchers = alivePlayers(room).filter((p) => p.id !== actingPlayer.id && activeGeneralId(p) === 'g6');
+  const watchers = alivePlayers(room).filter((p) => p.id !== actingPlayer.id && hasActiveAbility(p, 'g6'));
   for (const watcher of watchers) {
     const atkCard = watcher.hand.find((c) => c.cardId === 's_attack');
     if (!atkCard || actingPlayer.eliminated) continue;
@@ -280,7 +288,7 @@ export async function fireOnAnyCardUse(ctx, actingPlayer) {
 // ---------------------------------------------------------------------------
 export async function fireOnTurnStart(ctx, player) {
   const { room } = ctx;
-  if (activeGeneralId(player) === 'g16') {
+  if (hasActiveAbility(player, 'g16')) {
     ensureDeck(room);
     const top2 = [];
     if (room.deck.length) top2.push(room.deck.pop());
@@ -313,7 +321,7 @@ export async function fireOnTurnStart(ctx, player) {
 }
 
 export async function fireOnTurnEndNoAction(ctx, player) {
-  if (activeGeneralId(player) === 'g19' && ctx.room.turnActionsUsed.length === 0) {
+  if (hasActiveAbility(player, 'g19') && ctx.room.turnActionsUsed.length === 0) {
     drawCards(ctx.room, player, 2);
     log(ctx.room, `${player.name} ใช้ความสามารถชุนฮิว (ไม่ได้ทำอะไรในตานี้) จั่วการ์ด 2 ใบ`, `${player.name} did nothing this turn — Xun Yu draws 2 cards.`);
   }
@@ -632,6 +640,13 @@ async function abilityBorrowViceAbility(ctx, player) {
 
 export function isActionAbilityAvailable(player) {
   const gid = activeGeneralId(player);
+  if (gid === 'g4') {
+    // Yo Jin's own ∞ ability is the passive grant itself (no button needed for
+    // trigger/continuous Vice-Marshal abilities — see effectiveGeneralIds).
+    // The button is only meaningful if at least one Vice-Marshal has an
+    // action-type ability for him to invoke.
+    return viceGeneralIds(player).some((vgid) => GENERALS_BY_ID[vgid]?.actionSlotEligible);
+  }
   const gen = gid && GENERALS_BY_ID[gid];
   return !!gen && !!gen.actionSlotEligible;
 }

@@ -1,4 +1,4 @@
-import { activeGeneralId, discardFromHand, log, broadcastState, alivePlayers } from './state.js';
+import { hasActiveAbility, discardFromHand, log, broadcastState, alivePlayers } from './state.js';
 import { promptOne, promptMany } from './prompts.js';
 import { checkWinConditions } from './win.js';
 import {
@@ -17,7 +17,7 @@ export async function offerRevival(ctx, player) {
   const options = [];
   for (const p of eligible) {
     if (p.infantry >= 1) options.push({ playerId: p.id, method: 'infantry' });
-    if (activeGeneralId(p) === 'g21' && p.hand.length >= 2) options.push({ playerId: p.id, method: 'nanhua' });
+    if (hasActiveAbility(p, 'g21') && p.hand.length >= 2) options.push({ playerId: p.id, method: 'nanhua' });
   }
   if (options.length === 0) return false;
 
@@ -38,7 +38,7 @@ export async function offerRevival(ctx, player) {
 
   const { playerId, payload } = result;
   const rescuer = room.players.get(playerId);
-  const method = payload?.method === 'nanhua' && activeGeneralId(rescuer) === 'g21' ? 'nanhua' : 'infantry';
+  const method = payload?.method === 'nanhua' && hasActiveAbility(rescuer, 'g21') ? 'nanhua' : 'infantry';
 
   if (method === 'nanhua' && rescuer.hand.length >= 2) {
     const toDiscard = (payload.cardIds || []).slice(0, 2);
@@ -190,7 +190,7 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
   }
 
   await fireOnAttackSuccess(ctx, attacker, finalTarget, { fuel });
-  const baseAmount = activeGeneralId(attacker) === 'g9' ? 2 : 1;
+  const baseAmount = hasActiveAbility(attacker, 'g9') ? 2 : 1;
   const eliminated = await loseInfantry(ctx, finalTarget, baseAmount, { fromAttackBy: attacker.id });
 
   return { success: true, eliminated, targetId: finalTarget.id };

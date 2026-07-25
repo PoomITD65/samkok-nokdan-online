@@ -25,7 +25,13 @@ export default function ActionBar({ state, me, lookups, isMyTurn }) {
   const slotsLeft = 2 - used.length;
   const myActiveGeneralId = me.camp?.[me.marshalIndex]?.generalId;
   const activeGen = lookups.generalsById[myActiveGeneralId];
-  const generalAbilityAvailable = !!activeGen?.actionSlotEligible;
+  // Yo Jin (g4): his own ∞ ability is a passive grant, not an action itself —
+  // the button is only meaningful if a Vice-Marshal actually has an
+  // action-type ability for him to invoke.
+  const generalAbilityAvailable =
+    myActiveGeneralId === 'g4'
+      ? (me.viceMarshalIndices || []).some((idx) => lookups.generalsById[me.camp[idx]?.generalId]?.actionSlotEligible)
+      : !!activeGen?.actionSlotEligible;
 
   const canUse = (type) => slotsLeft > 0 && !used.includes(type);
 
