@@ -47,7 +47,7 @@
   },
   {
     "id": "t3_clay_golem",
-    "name": "ไท่ผิงหุ่นดิน",
+    "name": "หุ่นดินไท่ผิง",
     "nameEn": "Taiping Clay Golem",
     "type": "trick",
     "tag": "taiping",
@@ -55,8 +55,7 @@
     "icon": "continuous",
     "count": 4,
     "text": "ในช่วงเข้าตาเล่นของทุกคน ▸ เจ้าของตาจะต้องทิ้งการ์ดใบบนสุดจากกองเสบียง ▸ หากการ์ดที่ทิ้งไม่ใช่การ์ดคำสั่ง ▸ เจ้าของตาเสียทหารราบ 1 คน",
-    "textEn": "Continuous: at the start of every turn, the active player discards the top deck card; if it's not a Command (attack/defense) card, they lose 1 infantry.",
-    "_titleNote": "Title was glare-obscured in the source photo; read as starting with 'ไท่ผิง' (Taiping). Verify against the physical card."
+    "textEn": "Continuous: at the start of every turn, the active player discards the top deck card; if it's not a Command (attack/defense) card, they lose 1 infantry."
   },
   {
     "id": "t4_incite_rebellion",
