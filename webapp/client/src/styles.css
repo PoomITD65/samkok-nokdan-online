@@ -644,6 +644,51 @@ button {
   gap: 3px;
 }
 
+/* Event toasts */
+.toast-stack {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  pointer-events: none;
+  width: 100%;
+  padding: 0 10px;
+}
+.toast {
+  background: rgba(36, 26, 18, 0.95);
+  border: 1px solid #e8c477;
+  color: #f3e6cf;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  animation: toast-in-out 4.5s ease forwards;
+  max-width: 90vw;
+  text-align: center;
+}
+@keyframes toast-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  8% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
 /* Win screen */
 .win-panel {
   text-align: center;

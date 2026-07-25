@@ -5,6 +5,7 @@ import Hand from './Hand.jsx';
 import ActionBar from './ActionBar.jsx';
 import LogPanel from './LogPanel.jsx';
 import WinScreen from './WinScreen.jsx';
+import EventToasts from './EventToasts.jsx';
 
 export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLeave }) {
   const [showLog, setShowLog] = useState(false);
@@ -17,6 +18,7 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
 
   return (
     <div className="game-board">
+      <EventToasts log={state.log || []} />
       <header className="board-header">
         <span>ห้อง {roomCode}</span>
         <button className="btn ghost small" onClick={() => setShowLog((s) => !s)}>
