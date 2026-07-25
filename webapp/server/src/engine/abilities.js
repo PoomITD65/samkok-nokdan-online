@@ -213,20 +213,37 @@ async function hook_g15_xiahoudun(ctx, defender, attacker) {
   await loseInfantry(ctx, attacker, 2);
 }
 
-async function hook_g25_sunquan_loss(ctx, defender) {
-  drawCards(ctx.room, defender, 1);
-  log(ctx.room, `${defender.name} ใช้ความสามารถซุนกวน จั่วการ์ด 1 ใบ (เสียทหารราบ)`, `${defender.name} drew 1 card (Sun Quan, triggered by losing infantry).`);
-  broadcastState(ctx);
-}
-
-const onInfantryLostHooks = { g15: hook_g15_xiahoudun, g25: hook_g25_sunquan_loss };
+const onInfantryLostFromAttackHooks = { g15: hook_g15_xiahoudun };
 
 export async function fireOnInfantryLostFromAttack(ctx, defender, attacker) {
   const gid = activeGeneralId(defender);
-  const hook = onInfantryLostHooks[gid];
+  const hook = onInfantryLostFromAttackHooks[gid];
   if (!hook) return;
   try {
     await hook(ctx, defender, attacker);
+  } catch (e) {
+    log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
+  }
+}
+
+// Sun Quan's card says "when we lose infantry" with no qualifier — unlike
+// Xiahou Dun's (which explicitly requires "attacked"), so it must fire for
+// ANY infantry loss (combat, Clay Golem, Lightning Strike, spending it
+// yourself, etc.), not just losses inflicted by an attacker.
+async function hook_g25_sunquan_anyloss(ctx, player) {
+  drawCards(ctx.room, player, 1);
+  log(ctx.room, `${player.name} ใช้ความสามารถซุนกวน จั่วการ์ด 1 ใบ (เสียทหารราบ)`, `${player.name} drew 1 card (Sun Quan, triggered by losing infantry).`);
+  broadcastState(ctx);
+}
+
+const onAnyInfantryLossHooks = { g25: hook_g25_sunquan_anyloss };
+
+export async function fireOnAnyInfantryLoss(ctx, player) {
+  const gid = activeGeneralId(player);
+  const hook = onAnyInfantryLossHooks[gid];
+  if (!hook) return;
+  try {
+    await hook(ctx, player);
   } catch (e) {
     log(ctx.room, `เกิดข้อผิดพลาดกับความสามารถขุนพล: ${e.message}`, `General ability error: ${e.message}`);
   }
@@ -368,6 +385,7 @@ export async function performRecruit(ctx, player) {
 export async function performInfantryDraw(ctx, player) {
   if (player.infantry < 1) return { ok: false, reason: 'no_infantry' };
   const eliminated = await loseInfantry(ctx, player, 1);
+  await fireOnAnyCardUse(ctx, player); // Infantry is itself a "การ์ดทหารราบ" (Infantry card) per the rules.
   if (eliminated) return { ok: true, eliminated: true };
   drawCards(ctx.room, player, 2);
   log(ctx.room, `${player.name} เสียทหารราบ 1 เพื่อจั่วการ์ด 2 ใบ`, `${player.name} spent 1 infantry to draw 2 cards.`);

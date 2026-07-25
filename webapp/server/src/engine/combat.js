@@ -5,6 +5,7 @@ import {
   fireOnAttacked,
   fireOnAttackSuccess,
   fireOnInfantryLostFromAttack,
+  fireOnAnyInfantryLoss,
   fireOnAnyCardUse,
   continuousChecks
 } from './abilities.js';
@@ -67,6 +68,7 @@ export async function loseInfantry(ctx, player, amount, { fromAttackBy = null } 
     const attacker = room.players.get(fromAttackBy);
     if (attacker) await fireOnInfantryLostFromAttack(ctx, player, attacker);
   }
+  await fireOnAnyInfantryLoss(ctx, player);
 
   if (player.infantry <= 0 && !player.eliminated) {
     const revived = await offerRevival(ctx, player);
@@ -109,6 +111,7 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
     }
     if (attacker.infantry < 1) return { success: false, error: 'no_infantry' };
     const eliminatedSelf = await loseInfantry(ctx, attacker, 1);
+    await fireOnAnyCardUse(ctx, attacker); // Infantry is itself a "การ์ดทหารราบ" (Infantry card) per the rules.
     if (eliminatedSelf) return { success: false, error: 'attacker_eliminated' };
   } else if (fuel === 'card') {
     const card = attacker.hand.find((c) => c.instanceId === cardInstanceId);
@@ -137,7 +140,10 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
         if (result) {
           const player = room.players.get(result.playerId);
           const inciteCard = player.hand.find((c) => c.cardId === 't9_incite_army');
-          if (inciteCard) discardFromHand(room, player, inciteCard.instanceId);
+          if (inciteCard) {
+            discardFromHand(room, player, inciteCard.instanceId);
+            await fireOnAnyCardUse(ctx, player);
+          }
           const secondCard = attacker.hand.find((c) => c.cardId === 's_attack');
           if (!secondCard) {
             log(room, `${attacker.name} ไม่มีการ์ดโจมตีใบที่สอง การโจมตีถูกยกเลิก! (ปลุกปั่นกองทัพ)`, `${attacker.name} had no second Attack card — the attack fizzles! (Incite the Army)`);
@@ -229,6 +235,7 @@ async function resolveDefense(ctx, attacker, target, allowTrickAsDefense, depth 
         discardFromHand(room, player, card.instanceId);
         log(room, `${player.name} เล่น "ลอบโจมตี" ยกเลิกการป้องกันของ ${target.name}!`, `${player.name} played "Ambush" — ${target.name} must defend again!`);
         broadcastState(ctx);
+        await fireOnAnyCardUse(ctx, player);
         return resolveDefense(ctx, attacker, target, allowTrickAsDefense, depth + 1);
       }
     }

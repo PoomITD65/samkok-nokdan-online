@@ -35,6 +35,7 @@ export async function offerCounterTrick(ctx, aboutToResolveCardId) {
   discardFromHand(room, player, card.instanceId);
   log(room, `${player.name} เล่น "ซ้อนกลข้าศึก" ยกเลิกการ์ดอุบายนั้น!`, `${player.name} played "Counter-Scheme" — the trick card is negated!`);
   broadcastState(ctx);
+  await fireOnAnyCardUse(ctx, player);
   return true;
 }
 
