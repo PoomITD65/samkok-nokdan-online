@@ -1,4 +1,8 @@
 import { newId } from './util.js';
+// Circular import (state.js -> prompts.js for promptMany) — safe because
+// broadcastState is only called from inside function bodies below, well after
+// both modules have finished loading.
+import { broadcastState } from './state.js';
 
 // A prompt is a request for input from one or more players. Multiple prompts can
 // be outstanding at once (e.g. "Lightning Strike" asks every other player to
@@ -36,6 +40,7 @@ export function promptMany(ctx, eligiblePlayerIds, spec, timeoutMs = 60000) {
       delete room._resolvers[promptId];
       room.pendingPrompts = room.pendingPrompts.filter((p) => p.id !== promptId);
       io.to(room.code).emit('prompt:clear', { promptId });
+      broadcastState(ctx);
       resolve(result);
     };
 
@@ -89,6 +94,7 @@ export function promptMany(ctx, eligiblePlayerIds, spec, timeoutMs = 60000) {
       messageTh: spec.messageTh,
       eligiblePlayerIds
     });
+    broadcastState(ctx);
   });
 }
 

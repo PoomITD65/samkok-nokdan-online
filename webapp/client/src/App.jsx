@@ -3,6 +3,8 @@ import { socket, emitAsync } from './socket.js';
 import JoinScreen from './components/JoinScreen.jsx';
 import Lobby from './components/Lobby.jsx';
 import GameBoard from './components/GameBoard.jsx';
+import PromptModal from './components/PromptModal.jsx';
+import { buildLookups } from './gamedata.js';
 
 const STORAGE_KEY = 'samkok_session';
 
@@ -96,9 +98,17 @@ export default function App() {
     return <JoinScreen onJoined={handleJoined} error={error} setError={setError} />;
   }
 
-  if (state.phase === 'lobby') {
-    return <Lobby state={state} myPlayerId={myPlayerId} roomCode={roomCode} gameData={gameData} onLeave={leaveRoom} />;
-  }
+  const myPrompt = (state.myPrompts || [])[0];
+  const lookups = buildLookups(gameData);
 
-  return <GameBoard state={state} myPlayerId={myPlayerId} roomCode={roomCode} gameData={gameData} onLeave={leaveRoom} />;
+  return (
+    <>
+      {state.phase === 'lobby' ? (
+        <Lobby state={state} myPlayerId={myPlayerId} roomCode={roomCode} gameData={gameData} onLeave={leaveRoom} />
+      ) : (
+        <GameBoard state={state} myPlayerId={myPlayerId} roomCode={roomCode} gameData={gameData} onLeave={leaveRoom} />
+      )}
+      {myPrompt && <PromptModal prompt={myPrompt} state={state} myPlayerId={myPlayerId} lookups={lookups} />}
+    </>
+  );
 }

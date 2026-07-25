@@ -3,7 +3,6 @@ import { buildLookups, ROLE_LABEL_TH } from '../gamedata.js';
 import PlayerPanel from './PlayerPanel.jsx';
 import Hand from './Hand.jsx';
 import ActionBar from './ActionBar.jsx';
-import PromptModal from './PromptModal.jsx';
 import LogPanel from './LogPanel.jsx';
 import WinScreen from './WinScreen.jsx';
 import CardImage from './CardImage.jsx';
@@ -13,7 +12,6 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
   const lookups = buildLookups(gameData);
   const me = state.players.find((p) => p.id === myPlayerId);
   const isMyTurn = state.currentTurnPlayerId === myPlayerId;
-  const myPrompt = (state.myPrompts || [])[0];
   const myRole = me?.role ? lookups.rolesById[me.role] : null;
 
   if (!me) return null;
@@ -63,8 +61,6 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
       <ActionBar state={state} me={me} lookups={lookups} isMyTurn={isMyTurn} />
 
       {showLog && <LogPanel log={state.log || []} />}
-
-      {myPrompt && <PromptModal prompt={myPrompt} state={state} myPlayerId={myPlayerId} lookups={lookups} />}
 
       {state.winner && <WinScreen winner={state.winner} players={state.players} onLeave={onLeave} />}
     </div>
