@@ -111,8 +111,14 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
       }
 
       case 'chooseCards': {
-        const source = prompt.context?.source === 'discard' ? state.discard || [] : me?.hand || [];
-        const cards = (prompt.options || []).map((id) => source.find((c) => c.instanceId === id)).filter(Boolean);
+        let cards;
+        if (prompt.context?.source === 'inline') {
+          const cardIds = prompt.context?.cards || [];
+          cards = (prompt.options || []).map((instanceId, i) => ({ instanceId, cardId: cardIds[i] }));
+        } else {
+          const source = prompt.context?.source === 'discard' ? state.discard || [] : me?.hand || [];
+          cards = (prompt.options || []).map((id) => source.find((c) => c.instanceId === id)).filter(Boolean);
+        }
         return (
           <CardPicker
             cards={cards}

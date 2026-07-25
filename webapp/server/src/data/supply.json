@@ -81,9 +81,10 @@
   },
   {
     "id": "t6_lightning",
-    "name": "สายฟ้าฟาด",
-    "nameEn": "Lightning Strike",
+    "name": "สายฟ้าไท่ผิง",
+    "nameEn": "Taiping Lightning",
     "type": "trick",
+    "tag": "taiping",
     "image": "/assets/cards/supply/t6.jpg",
     "icon": "action",
     "count": 4,

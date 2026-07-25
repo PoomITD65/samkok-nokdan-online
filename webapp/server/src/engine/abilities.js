@@ -572,12 +572,31 @@ async function abilitySearchTaiping(ctx, player) {
   const [card] = player.hand.splice(idx, 1);
   room.deck.unshift(card);
 
-  const idx2 = room.deck.findIndex((c) => SUPPLY_BY_ID[c.cardId]?.tag === 'taiping');
-  if (idx2 === -1) {
+  const matches = room.deck.filter((c) => SUPPLY_BY_ID[c.cardId]?.tag === 'taiping');
+  if (matches.length === 0) {
     log(room, `${player.name} ใช้ความสามารถเตียวก๊ก แต่ไม่พบการ์ดไท่ผิงในกองเสบียง`, `${player.name} used Zhang Jiao's ability, but no Taiping card was found in the deck.`);
     broadcastState(ctx);
     return { ok: false };
   }
+
+  let foundInstanceId = matches[0].instanceId;
+  if (matches.length > 1) {
+    // The card text says "เลือก" (CHOOSE) — if more than one Taiping card is
+    // in the deck, the player picks which one, it isn't auto-selected.
+    const pickRes = await promptOne(ctx, player.id, {
+      kind: 'chooseCards',
+      messageTh: `ความสามารถเตียวก๊ก: พบการ์ดไท่ผิง ${matches.length} ใบในกองเสบียง เลือก 1 ใบ`,
+      message: `Zhang Jiao: found ${matches.length} Taiping cards in the deck — choose 1.`,
+      options: matches.map((c) => c.instanceId),
+      min: 1,
+      max: 1,
+      context: { source: 'inline', cards: matches.map((c) => c.cardId) }
+    }, 20000);
+    if (pickRes?.choice && matches.some((c) => c.instanceId === pickRes.choice)) {
+      foundInstanceId = pickRes.choice;
+    }
+  }
+  const idx2 = room.deck.findIndex((c) => c.instanceId === foundInstanceId);
   const [foundCard] = room.deck.splice(idx2, 1);
   player.hand.push(foundCard);
   log(room, `${player.name} ใช้ความสามารถเตียวก๊ก ค้นหาการ์ดไท่ผิงขึ้นมือ`, `${player.name} searched the deck for a Taiping card (Zhang Jiao).`);
