@@ -165,9 +165,21 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
   log(room, `${attacker.name} โจมตี ${target.name}!`, `${attacker.name} attacks ${target.name}!`);
   broadcastState(ctx);
 
-  const attackedResult = await fireOnAttacked(ctx, attacker, target);
-  const finalTarget = attackedResult.newTarget || target;
-  const allowTrickAsDefense = !!attackedResult.allowTrickAsDefense;
+  // Re-check "onAttacked" hooks against whoever currently holds the target
+  // slot — a redirect (Diao Chan) can hand the attack to someone else who
+  // has their OWN onAttacked ability (e.g. Luo Zhi's trick-as-defense), which
+  // must still apply to them, not just to the original target.
+  let finalTarget = target;
+  let allowTrickAsDefense = false;
+  for (let hop = 0; hop < 5; hop++) {
+    const attackedResult = await fireOnAttacked(ctx, attacker, finalTarget);
+    allowTrickAsDefense = !!attackedResult.allowTrickAsDefense;
+    if (attackedResult.newTarget && attackedResult.newTarget.id !== finalTarget.id) {
+      finalTarget = attackedResult.newTarget;
+      continue;
+    }
+    break;
+  }
 
   const success = await resolveDefense(ctx, attacker, finalTarget, allowTrickAsDefense);
 
