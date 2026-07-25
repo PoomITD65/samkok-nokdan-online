@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { buildLookups, ROLE_LABEL_TH } from '../gamedata.js';
-import PlayerPanel from './PlayerPanel.jsx';
+import TableOval from './TableOval.jsx';
 import Hand from './Hand.jsx';
 import ActionBar from './ActionBar.jsx';
 import LogPanel from './LogPanel.jsx';
 import WinScreen from './WinScreen.jsx';
-import CardImage from './CardImage.jsx';
 
 export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLeave }) {
   const [showLog, setShowLog] = useState(false);
@@ -35,18 +34,7 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
         </div>
       )}
 
-      <div className="players-grid">
-        {state.players.map((p) => (
-          <PlayerPanel key={p.id} player={p} isMe={p.id === myPlayerId} isCurrentTurn={p.id === state.currentTurnPlayerId} lookups={lookups} />
-        ))}
-      </div>
-
-      <div className="deck-info">
-        <CardImage src="/assets/cards/backs/supply_back.jpg" label="กองเสบียง" size="xs" />
-        <span>เหลือในกอง: {state.deckCount}</span>
-        <span>กองใช้แล้ว: {state.discardCount}</span>
-        <span>ขุนพลในกอง: {state.generalPoolCount}</span>
-      </div>
+      <TableOval state={state} myPlayerId={myPlayerId} lookups={lookups} />
 
       {state.waitingOn && state.waitingOn.length > 0 && (
         <div className="waiting-banner">
