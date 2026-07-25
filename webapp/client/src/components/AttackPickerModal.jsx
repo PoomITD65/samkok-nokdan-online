@@ -55,6 +55,7 @@ export default function AttackPickerModal({ others, myHand, myInfantry, anyCardF
               key={c.instanceId}
               src={def?.image}
               label={def?.name}
+              text={def?.text}
               size="md"
               onClick={() => onConfirm({ targetId, fuel: 'card', cardInstanceId: c.instanceId })}
             />

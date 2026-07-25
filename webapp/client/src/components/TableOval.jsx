@@ -45,7 +45,16 @@ export default function TableOval({ state, myPlayerId, lookups }) {
               {state.continuousTricks.map((ct) => {
                 const def = lookups.supplyById[ct.cardId];
                 const owner = players.find((p) => p.id === ct.ownerPlayerId);
-                return <CardImage key={ct.instanceId} src={def?.image} label={def?.name} sublabel={owner?.name} size="xs" />;
+                return (
+                  <CardImage
+                    key={ct.instanceId}
+                    src={def?.image}
+                    label={def?.name}
+                    sublabel={owner?.name ? `วางโดย ${owner.name}` : undefined}
+                    text={def?.text}
+                    size="sm"
+                  />
+                );
               })}
             </div>
           )}

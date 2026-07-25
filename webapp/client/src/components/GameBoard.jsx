@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { buildLookups, ROLE_LABEL_TH } from '../gamedata.js';
+import { buildLookups } from '../gamedata.js';
 import TableOval from './TableOval.jsx';
 import Hand from './Hand.jsx';
 import ActionBar from './ActionBar.jsx';
 import LogPanel from './LogPanel.jsx';
 import WinScreen from './WinScreen.jsx';
 import EventToasts from './EventToasts.jsx';
+import RoleRevealGate from './RoleRevealGate.jsx';
+import CardImage from './CardImage.jsx';
 
 export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLeave }) {
   const [showLog, setShowLog] = useState(false);
@@ -14,7 +16,15 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
   const isMyTurn = state.currentTurnPlayerId === myPlayerId;
   const myRole = me?.role ? lookups.rolesById[me.role] : null;
 
+  const roleGateKey = `samkok_role_seen_${roomCode}_${myPlayerId}`;
+  const [roleGateDismissed, setRoleGateDismissed] = useState(() => localStorage.getItem(roleGateKey) === 'true');
+  const needsRoleGate = myRole && myRole.id !== 'royal' && !roleGateDismissed;
+
   if (!me) return null;
+
+  if (needsRoleGate) {
+    return <RoleRevealGate roleDef={myRole} storageKey={roleGateKey} onDone={() => setRoleGateDismissed(true)} />;
+  }
 
   return (
     <div className="game-board">
@@ -31,8 +41,11 @@ export default function GameBoard({ state, myPlayerId, roomCode, gameData, onLea
 
       {myRole && (
         <div className="my-role-banner">
-          <strong>บทบาทของคุณ: {ROLE_LABEL_TH[myRole.id] || myRole.name}</strong>
-          <span>{myRole.winCondition}</span>
+          <CardImage src={myRole.image} label={myRole.name} noZoom size="xs" />
+          <div className="my-role-text">
+            <strong>บทบาทของคุณ: {myRole.name}</strong>
+            <span>{myRole.winCondition}</span>
+          </div>
         </div>
       )}
 

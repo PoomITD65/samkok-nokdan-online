@@ -25,7 +25,7 @@ export default function CardPicker({ cards, lookups, min = 0, max = 1, onConfirm
               key={c.instanceId}
               src={def?.image}
               label={def?.name}
-              sublabel={def?.textEn}
+              text={def?.text}
               size="md"
               selected={selected.includes(c.instanceId)}
               onClick={() => toggle(c.instanceId)}

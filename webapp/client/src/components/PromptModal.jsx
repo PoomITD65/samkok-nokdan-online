@@ -84,7 +84,7 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
                   key={gid}
                   src={gen?.image}
                   label={gen?.name}
-                  sublabel={gen?.textEn}
+                  text={gen?.text}
                   size="lg"
                   onClick={() => respond({ choice: gid })}
                 />

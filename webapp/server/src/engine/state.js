@@ -216,6 +216,7 @@ export function buildPlayerView(room, viewerId) {
     viceMarshalIndex: p.viceMarshalIndex,
     handCount: p.hand.length,
     hand: p.id === viewerId ? p.hand : undefined,
+    hasRole: !!p.role,
     role: p.id === viewerId || p.roleRevealed || p.eliminated ? p.role : null,
     roleRevealed: p.roleRevealed || p.eliminated || p.id === viewerId
   }));
