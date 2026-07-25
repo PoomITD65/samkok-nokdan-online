@@ -1,0 +1,127 @@
+[
+  {
+    "id": "s_attack",
+    "name": "โจมตี",
+    "nameEn": "Attack",
+    "type": "attack",
+    "image": "/assets/cards/supply/s_attack.jpg",
+    "icon": "action",
+    "count": 33,
+    "text": "นำการ์ดนี้จากมือไปยังกองใช้แล้ว ▸ เราเลือกโจมตีผู้เล่น 1 คนได้ทันที",
+    "textEn": "Discard this card; choose to attack 1 player immediately."
+  },
+  {
+    "id": "s_defense",
+    "name": "ป้องกัน",
+    "nameEn": "Defense",
+    "type": "defense",
+    "image": "/assets/cards/supply/s_defense.jpg",
+    "icon": "trigger",
+    "count": 33,
+    "text": "เมื่อเราถูกโจมตี ▸ นำการ์ดใบนี้จากบนมือไปยังกองใช้แล้ว ▸ ป้องกันการโจมตีนั้น",
+    "textEn": "When attacked, discard this card to block that attack."
+  },
+  {
+    "id": "t1_counter_trick",
+    "name": "ซ้อนกลข้าศึก",
+    "nameEn": "Counter-Scheme",
+    "type": "trick",
+    "image": "/assets/cards/supply/t1.jpg",
+    "icon": "trigger",
+    "count": 2,
+    "text": "เมื่อการ์ดอุบายทำงาน ▸ นำการ์ดใบนี้จากบนมือไปยังกองใช้แล้ว ▸ การ์ดอุบายนั้นไม่ทำงาน",
+    "textEn": "When a trick card resolves, discard this to negate it."
+  },
+  {
+    "id": "t2_restore",
+    "name": "ไท่ผิงฟื้นพลัง",
+    "nameEn": "Taiping Restoration",
+    "type": "trick",
+    "tag": "taiping",
+    "image": "/assets/cards/supply/t2.jpg",
+    "icon": "action",
+    "count": 4,
+    "text": "ฟื้นทหารราบที่เสียไป 2 คนให้กับผู้เล่น 1 คน",
+    "textEn": "Restore 2 lost infantry to 1 chosen player.",
+    "_titleNote": "Title was glare-obscured in the source photo; read as starting with 'ไท่ผิง' (Taiping), matching Zhang Jiao's (g24) search ability which looks for Taiping-named tricks. Verify against the physical card."
+  },
+  {
+    "id": "t3_clay_golem",
+    "name": "ไท่ผิงหุ่นดิน",
+    "nameEn": "Taiping Clay Golem",
+    "type": "trick",
+    "tag": "taiping",
+    "image": "/assets/cards/supply/t3.jpg",
+    "icon": "continuous",
+    "count": 4,
+    "text": "ในช่วงเข้าตาเล่นของทุกคน ▸ เจ้าของตาจะต้องทิ้งการ์ดใบบนสุดจากกองเสบียง ▸ หากการ์ดที่ทิ้งไม่ใช่การ์ดคำสั่ง ▸ เจ้าของตาเสียทหารราบ 1 คน",
+    "textEn": "Continuous: at the start of every turn, the active player discards the top deck card; if it's not a Command (attack/defense) card, they lose 1 infantry.",
+    "_titleNote": "Title was glare-obscured in the source photo; read as starting with 'ไท่ผิง' (Taiping). Verify against the physical card."
+  },
+  {
+    "id": "t4_incite_rebellion",
+    "name": "ก่อกบฏ",
+    "nameEn": "Incite Rebellion",
+    "type": "trick",
+    "image": "/assets/cards/supply/t4.jpg",
+    "icon": "action",
+    "count": 4,
+    "text": "สั่งให้ผู้เล่น 1 คนต้องโจมตีผู้เล่นที่เราเลือก 1 คน",
+    "textEn": "Order 1 player to attack another player of your choosing."
+  },
+  {
+    "id": "t5_ambush",
+    "name": "ลอบโจมตี",
+    "nameEn": "Ambush",
+    "type": "trick",
+    "image": "/assets/cards/supply/t5.jpg",
+    "icon": "trigger",
+    "count": 4,
+    "text": "เมื่อมีคนลงการ์ดป้องกัน ▸ นำการ์ดใบนี้จากบนมือไปยังกองใช้แล้ว ▸ ผู้เล่นนั้นต้องลงการ์ดป้องกันอีกใบจึงจะป้องกันการโจมตีนั้นได้",
+    "textEn": "When someone plays a defense card, discard this to force them to play a second defense card to actually block."
+  },
+  {
+    "id": "t6_lightning",
+    "name": "สายฟ้าฟาด",
+    "nameEn": "Lightning Strike",
+    "type": "trick",
+    "image": "/assets/cards/supply/t6.jpg",
+    "icon": "action",
+    "count": 4,
+    "text": "ผู้เล่นอื่นทุกคนต้องทิ้งการ์ดในมือ 1 ใบ (การ์ดอุบายหรือการ์ดป้องกัน) ▸ ผู้เล่นคนใดไม่สามารถทิ้งได้ ▸ ผู้เล่นนั้นเสียทหารราบ 1 คน",
+    "textEn": "All other players must discard 1 trick or defense card from hand; anyone who can't loses 1 infantry."
+  },
+  {
+    "id": "t7_collect_tax",
+    "name": "เก็บภาษี",
+    "nameEn": "Collect Tax",
+    "type": "trick",
+    "image": "/assets/cards/supply/t7.jpg",
+    "icon": "action",
+    "count": 4,
+    "text": "เราจั่วการ์ดจากกองเสบียง 3 ใบ",
+    "textEn": "Draw 3 cards from the supply deck."
+  },
+  {
+    "id": "t8_ask_for_help",
+    "name": "ขอความช่วยเหลือ",
+    "nameEn": "Ask for Help",
+    "type": "trick",
+    "image": "/assets/cards/supply/t8.jpg",
+    "icon": "action",
+    "count": 4,
+    "text": "สุ่มหยิบการ์ดจากมือของผู้เล่นอื่น 2 ใบ ▸ นำการ์ดในมือเรามอบให้ผู้เล่นนั้น 1 ใบ",
+    "textEn": "Randomly take 2 cards from another player's hand, then give them 1 card from your own hand."
+  },
+  {
+    "id": "t9_incite_army",
+    "name": "ปลุกปั่นกองทัพ",
+    "nameEn": "Incite the Army",
+    "type": "trick",
+    "image": "/assets/cards/supply/t9.jpg",
+    "icon": "trigger",
+    "count": 4,
+    "text": "เมื่อมีคนลงการ์ดโจมตี ▸ นำการ์ดใบนี้จากบนมือไปยังกองใช้แล้ว ▸ ผู้เล่นนั้นต้องลงการ์ดโจมตีอีกใบจึงจะสามารถโจมตีต่อได้",
+    "textEn": "When someone plays an attack card, discard this to force them to play a second attack card to actually attack."
+  }
+]

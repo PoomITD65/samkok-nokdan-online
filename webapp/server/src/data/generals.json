@@ -1,0 +1,228 @@
+[
+  {
+    "id": "g1",
+    "name": "โจโฉ",
+    "nameEn": "Cao Cao",
+    "image": "/assets/cards/generals/g1.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ เราเลือกนำการ์ดอุบาย 1 ใบจากกองใช้แล้วขึ้นมือเรา 1 ใบ",
+    "textEn": "If our attack succeeds, take 1 trick card from the discard pile into our hand."
+  },
+  {
+    "id": "g2",
+    "name": "ซุนเกี๋ยน",
+    "nameEn": "Sun Jian",
+    "image": "/assets/cards/generals/g2.jpg",
+    "icon": "continuous",
+    "text": "เราใช้การ์ดบนมือใบใดก็ได้เพื่อโจมตีผู้เล่นแทนการใช้การ์ดโจมตี",
+    "textEn": "We may use any card in hand to attack a player, in place of an attack card."
+  },
+  {
+    "id": "g3",
+    "name": "เตียวเหลียง",
+    "nameEn": "Zhang Liang",
+    "image": "/assets/cards/generals/g3.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ สุ่มขโมยการ์ดในมือคู่ต่อสู้ 1 ใบ",
+    "textEn": "If our attack succeeds, randomly steal 1 card from the opponent's hand."
+  },
+  {
+    "id": "g4",
+    "name": "โยจิ๋น",
+    "nameEn": "He Jin",
+    "image": "/assets/cards/generals/g4.jpg",
+    "icon": "action",
+    "_iconNote": "Photographed icon looked like the passive/continuous symbol, but the ability text ('we MAY use...only on our turn') clearly reads as an optional per-turn action, so it's implemented as the action-slot type. Worth checking the real card if you have it.",
+    "text": "เราสามารถใช้ความสามารถของรองแม่ทัพตัวใดก็ได้ของเรา (ความสามารถนี้ใช้ได้เฉพาะตาเราเท่านั้น)",
+    "textEn": "We may use the ability of any Vice-Marshal general in our camp (only on our own turn)."
+  },
+  {
+    "id": "g5",
+    "name": "ง่อฮูหยิน",
+    "nameEn": "Lady Wu",
+    "image": "/assets/cards/generals/g5.jpg",
+    "icon": "continuous",
+    "text": "การ์ดอุบายที่คนอื่นใช้ กับ การ์ดอุบายต่อเนื่องจะไม่ส่งผลต่อเรา",
+    "textEn": "Trick cards played by others, and continuous trick cards, have no effect on us."
+  },
+  {
+    "id": "g6",
+    "name": "ม้าอ้วนยี่",
+    "nameEn": null,
+    "image": "/assets/cards/generals/g6.jpg",
+    "icon": "trigger",
+    "text": "เมื่อมีคนใช้การ์ด ▸ เราสามารถทิ้งการ์ดโจมตีใบในมือเรา 1 ใบ ▸ ผู้เล่นนั้นเสียทหารราบ 1",
+    "textEn": "When any player uses a card, we may discard 1 attack card from our hand; that player loses 1 infantry."
+  },
+  {
+    "id": "g7",
+    "name": "เล่าปี่",
+    "nameEn": "Liu Bei",
+    "image": "/assets/cards/generals/g7.jpg",
+    "icon": "action",
+    "text": "เราทิ้งการ์ดบนมือ 3 ใบ ▸ เลือกนำขุนพลในกองขุนพลมาอยู่ในค่ายเรา 1 คน",
+    "textEn": "Discard 3 cards from hand; choose 1 general from the general pool to bring into our camp."
+  },
+  {
+    "id": "g8",
+    "name": "เตียวเสี้ยน",
+    "nameEn": "Diao Chan",
+    "image": "/assets/cards/generals/g8.jpg",
+    "icon": "trigger",
+    "text": "เมื่อเราถูกโจมตี ▸ ให้เรานำการ์ดโจมตี 1 ใบที่อยู่ในมือเราไปยังกองใช้แล้ว ▸ เลือกผู้เล่น 1 คนรับการโจมตีแทนเรา",
+    "textEn": "When we are attacked, discard 1 attack card from our hand to redirect the attack to another chosen player."
+  },
+  {
+    "id": "g9",
+    "name": "ลิโป้",
+    "nameEn": "Lü Bu",
+    "image": "/assets/cards/generals/g9.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ คู่ต่อสู้เสียทหารราบ 2 คน",
+    "textEn": "If our attack succeeds, opponent loses 2 infantry instead of 1."
+  },
+  {
+    "id": "g10",
+    "name": "โลติด",
+    "nameEn": null,
+    "image": "/assets/cards/generals/g10.jpg",
+    "icon": "trigger",
+    "text": "เมื่อเราถูกโจมตี ▸ สามารถใช้การ์ดอุบายแทนการ์ดป้องกันได้",
+    "textEn": "When we are attacked, we may use a trick card in place of a defense card."
+  },
+  {
+    "id": "g11",
+    "name": "ตั๋งโต๊ะ",
+    "nameEn": "Dong Zhuo",
+    "image": "/assets/cards/generals/g11.jpg",
+    "icon": "continuous",
+    "text": "เราสามารถโจมตีผู้เล่นที่มีขุนพลในค่ายตั้งแต่ 2 คนลงไปได้ทันที (โดยเราไม่ต้องใช้การ์ดโจมตี หรือ ทหารราบ)",
+    "textEn": "We may immediately attack any player with 2 or fewer generals in their camp, without spending an attack card or infantry."
+  },
+  {
+    "id": "g12",
+    "name": "กองซุนจ้าน",
+    "nameEn": "Gongsun Zan",
+    "image": "/assets/cards/generals/g12.jpg",
+    "icon": "action",
+    "text": "นำการ์ดทหารราบออก 1 ใบ ▸ เราจั่วการ์ดจากกองเสบียง 2 ใบ",
+    "textEn": "Remove 1 of our own infantry; draw 2 cards from the supply deck."
+  },
+  {
+    "id": "g13",
+    "name": "กวนอู",
+    "nameEn": "Guan Yu",
+    "image": "/assets/cards/generals/g13.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ คู่ต่อสู้ต้องแสดงการ์ดในมือทั้งหมดให้เราดู ▸ ถ้าในมือมีการ์ดโจมตี ▸ คู่ต่อสู้เสียทหารราบ 1 คน และ ทิ้งการ์ดโจมตี 1 ใบ",
+    "textEn": "If our attack succeeds, opponent reveals their hand; if it contains an attack card, they lose 1 more infantry and discard that attack card."
+  },
+  {
+    "id": "g14",
+    "name": "เตียวหุย",
+    "nameEn": "Zhang Fei",
+    "image": "/assets/cards/generals/g14.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ เราจั่วการ์ดจากกองเสบียง 2 ใบ",
+    "textEn": "If our attack succeeds, draw 2 cards from the supply deck."
+  },
+  {
+    "id": "g15",
+    "name": "แฮหัวต้น",
+    "nameEn": "Xiahou Dun",
+    "image": "/assets/cards/generals/g15.jpg",
+    "icon": "trigger",
+    "text": "เมื่อเราถูกโจมตีจนสูญเสียทหารราบ ▸ เราสามารถนำการ์ดโจมตี 1 ใบและการ์ดป้องกัน 1 ใบจากมือไปยังกองใช้แล้ว ▸ คู่ต่อสู้สูญเสียทหารราบ 2 คน",
+    "textEn": "When we lose infantry from an attack, we may discard 1 attack + 1 defense card from hand to make the attacker lose 2 infantry."
+  },
+  {
+    "id": "g16",
+    "name": "ชุนยก",
+    "nameEn": "Xun You",
+    "image": "/assets/cards/generals/g16.jpg",
+    "icon": "trigger",
+    "text": "เมื่อเข้าตาเรา ▸ เราดูการ์ด 2 ใบบนสุดจากกองเสบียง ▸ นำการ์ด 1 ใบขึ้นมือเรา อีกใบให้นำไปไว้ใต้กองเสบียง แทนการจั่วการ์ดเมื่อเข้าตาเล่น",
+    "textEn": "On our turn, instead of the normal draw, look at top 2 cards of the deck: take 1 into hand, put the other on the bottom."
+  },
+  {
+    "id": "g17",
+    "name": "ตั๊กอิ๋ว",
+    "nameEn": null,
+    "image": "/assets/cards/generals/g17.jpg",
+    "icon": "action",
+    "text": "ขอการ์ด 1 ใบจากผู้เล่น 1 คน ▸ ถ้าผู้เล่นนั้นไม่ให้การ์ดเรา ▸ ผู้เล่นนั้นเสียทหารราบ 1 คน หรือ นำรองแม่ทัพ 1 คนของผู้เล่นนั้นกลับกองขุนพล",
+    "textEn": "Demand 1 card from a chosen player; if refused, that player loses 1 infantry OR one of their Vice-Marshal generals returns to the pool."
+  },
+  {
+    "id": "g18",
+    "name": "เตียวเหยียง",
+    "nameEn": "Zhang Rang",
+    "image": "/assets/cards/generals/g18.jpg",
+    "icon": "continuous",
+    "text": "ผู้เล่นอื่นไม่สามารถใช้ทหารราบโจมตีใส่เรา",
+    "textEn": "Other players cannot use infantry to attack us."
+  },
+  {
+    "id": "g19",
+    "name": "ชุนฮิว",
+    "nameEn": "Xun Yu",
+    "image": "/assets/cards/generals/g19.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราประกาศจบตาโดยที่ตานี้เราไม่ได้ทำอะไร ▸ เราจั่วการ์ดเสบียง 2 ใบ",
+    "textEn": "If we end our turn having done nothing, draw 2 supply cards."
+  },
+  {
+    "id": "g20",
+    "name": "เขาเฉียว",
+    "nameEn": null,
+    "image": "/assets/cards/generals/g20.jpg",
+    "icon": "action",
+    "text": "เราดูการ์ด 3 ใบบนสุดของกองเสบียง ▸ เลือกสลับตำแหน่งการ์ด 3 ใบนั้น ▸ นำการ์ด 3 นั้นวางกลับบนสุดของกองเสบียง",
+    "textEn": "Look at top 3 cards of the deck, reorder them as desired, place back on top."
+  },
+  {
+    "id": "g21",
+    "name": "เซียนหนานหัว",
+    "nameEn": "Sage of Nanhua",
+    "image": "/assets/cards/generals/g21.jpg",
+    "icon": "trigger",
+    "text": "เมื่อผู้เล่นใดเสียทหารราบทั้งหมด ▸ เราสามารถทิ้งการ์ดในมือ 2 ใบ ▸ ฟื้นทหารราบ 1 คนให้ผู้เล่นนั้น",
+    "textEn": "When any player loses all infantry, we may discard 2 cards from hand to restore 1 infantry to them."
+  },
+  {
+    "id": "g22",
+    "name": "ฮองฮูสง",
+    "nameEn": "Huangfu Song",
+    "image": "/assets/cards/generals/g22.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราใช้ทหารราบโจมตีสำเร็จ ▸ คู่ต่อสู้เสียทหารราบเพิ่มขึ้น 1 คน ▸ เราจั่วการ์ดจากกองเสบียง 1 ใบ",
+    "textEn": "If we succeed an attack made by spending infantry, opponent loses 1 additional infantry and we draw 1 card."
+  },
+  {
+    "id": "g23",
+    "name": "จูล่ง",
+    "nameEn": "Zhao Yun",
+    "image": "/assets/cards/generals/g23.jpg",
+    "icon": "trigger",
+    "text": "ถ้าเราโจมตีสำเร็จ ▸ เราสามารถใช้การ์ดโจมตีได้อีก 1 ครั้ง (ความสามารถนี้ใช้ได้ตาละ 1 ครั้ง)",
+    "textEn": "If our attack succeeds, we may immediately attack again with another attack card (once per turn)."
+  },
+  {
+    "id": "g24",
+    "name": "เตียวก๊ก",
+    "nameEn": "Zhang Jiao",
+    "image": "/assets/cards/generals/g24.jpg",
+    "icon": "action",
+    "text": "นำการ์ดอุบายในมือ 1 ใบกลับเข้ากองเสบียง ▸ เลือกนำการ์ดอุบายที่ติดชื่อไท่ผิงจากกองเสบียงขึ้นมือเรา 1 ใบ",
+    "textEn": "Return 1 trick card from hand into the deck; search the deck for a 'Taiping'-named trick card into hand."
+  },
+  {
+    "id": "g25",
+    "name": "ซุนกวน",
+    "nameEn": "Sun Quan",
+    "image": "/assets/cards/generals/g25.jpg",
+    "icon": "trigger",
+    "text": "เมื่อเราโจมตีสำเร็จ หรือ เราเสียทหารราบ ▸ เราจั่วการ์ดเสบียง 1 ใบ",
+    "textEn": "When we succeed an attack, or when we lose infantry, draw 1 supply card."
+  }
+]

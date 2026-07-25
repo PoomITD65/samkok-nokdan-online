@@ -1,0 +1,20 @@
+{
+  "id": "infantry",
+  "name": "ทหารราบ",
+  "nameEn": "Infantry",
+  "image": "/assets/cards/supply/infantry.jpg",
+  "startingCount": 5,
+  "totalInBox": 50,
+  "abilities": [
+    {
+      "key": "spend_to_attack",
+      "text": "นำทหารราบตัวนี้ออกจากเกม ▸ เราเลือกโจมตีผู้เล่น 1 คนได้ทันที",
+      "textEn": "Remove 1 of our own infantry to attack a chosen player immediately (no attack card needed)."
+    },
+    {
+      "key": "spend_to_draw",
+      "text": "นำทหารราบตัวนี้ออกจากเกม ▸ เราจั่วการ์ดจากกองเสบียง 2 ใบ",
+      "textEn": "Remove 1 of our own infantry to draw 2 cards from the supply deck."
+    }
+  ]
+}

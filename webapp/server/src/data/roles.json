@@ -1,0 +1,70 @@
+{
+  "roles": [
+    {
+      "id": "royal",
+      "name": "ราชสำนัก",
+      "nameEn": "Royal Court",
+      "image": "/assets/cards/roles/r_royal.jpg",
+      "revealAtStart": true,
+      "winCondition": "โจรกบฏ และ พวกนอกด่าน ออกจากเกมทั้งหมด",
+      "winConditionEn": "Win when the Rebel-Bandit faction and the Outside-the-Pass faction are all eliminated from the game.",
+      "winMode": "all",
+      "requires": ["rebel_eliminated", "invader_eliminated"]
+    },
+    {
+      "id": "marshal",
+      "name": "แม่ทัพ",
+      "nameEn": "Marshal",
+      "image": "/assets/cards/roles/r_marshal.jpg",
+      "revealAtStart": false,
+      "winCondition": "ต้องสำเร็จทั้ง 2 ข้อ: โจรกบฏ และ พวกนอกด่าน ออกจากเกมทั้งหมด, และราชสำนักยังอยู่ในเกม",
+      "winConditionEn": "Win when BOTH: (1) Rebel-Bandits and Outside-the-Pass faction are all eliminated, AND (2) the Royal Court player is still alive.",
+      "winMode": "all",
+      "requires": ["rebel_eliminated", "invader_eliminated", "royal_alive"]
+    },
+    {
+      "id": "vicemarshal",
+      "name": "รองแม่ทัพ",
+      "nameEn": "Vice-Marshal",
+      "image": "/assets/cards/roles/r_vicemarshal.jpg",
+      "revealAtStart": false,
+      "winCondition": "ต้องสำเร็จทั้ง 2 ข้อ: แม่ทัพ และ โจรกบฏ ออกจากเกมทั้งหมด, และราชสำนักยังอยู่ในเกม",
+      "winConditionEn": "Win when BOTH: (1) the Marshal and the Rebel-Bandits are all eliminated, AND (2) the Royal Court player is still alive.",
+      "winMode": "all",
+      "requires": ["marshal_eliminated", "rebel_eliminated", "royal_alive"]
+    },
+    {
+      "id": "invader",
+      "name": "พวกนอกด่าน",
+      "nameEn": "Outside-the-Pass Invaders",
+      "image": "/assets/cards/roles/r_invader.jpg",
+      "revealAtStart": false,
+      "winCondition": "สำเร็จ 1 ข้อ: (1) แม่ทัพ, รองแม่ทัพ และ โจรกบฏ ออกจากเกมทั้งหมด หรือ (2) ราชสำนักออกจากเกมในตาที่ต่อสู้กับเรา",
+      "winConditionEn": "Win when EITHER: (1) the Marshal, Vice-Marshal and Rebel-Bandits are all eliminated, OR (2) the Royal Court is eliminated in a fight against us.",
+      "winMode": "any",
+      "requires": ["marshal_vicemarshal_rebel_eliminated_OR_killed_royal_in_combat"]
+    },
+    {
+      "id": "rebel",
+      "name": "โจรกบฏ",
+      "nameEn": "Rebel Bandits",
+      "image": "/assets/cards/roles/r_rebel.jpg",
+      "revealAtStart": false,
+      "winCondition": "ราชสำนักออกจากเกมในตาที่ต่อสู้กับเรา",
+      "winConditionEn": "Win when the Royal Court is eliminated in a fight against us.",
+      "winMode": "any",
+      "requires": ["killed_royal_in_combat"]
+    }
+  ],
+  "_note_2players": "ถ้าเล่น 2 คน ไม่ต้องใช้การ์ดบทบาท (no roles dealt; win purely by last-Infantry-standing).",
+  "countsByPlayerCount": {
+    "3":  { "royal": 1, "marshal": 0, "vicemarshal": 0, "rebel": 1, "invader": 1 },
+    "4":  { "royal": 1, "marshal": 1, "vicemarshal": 0, "rebel": 1, "invader": 1 },
+    "5":  { "royal": 1, "marshal": 1, "vicemarshal": 1, "rebel": 1, "invader": 1 },
+    "6":  { "royal": 1, "marshal": 1, "vicemarshal": 1, "rebel": 2, "invader": 1 },
+    "7":  { "royal": 1, "marshal": 1, "vicemarshal": 1, "rebel": 2, "invader": 2, "_assumptionNote": "Rulebook photo table sums to 8 (not 7) for this column, likely a single misprinted/misread digit; marshal count reduced from photographed '2' to '1' here so the total matches player count. Please verify against the physical rulebook if you regularly play with exactly 7." },
+    "8":  { "royal": 1, "marshal": 2, "vicemarshal": 1, "rebel": 2, "invader": 2 },
+    "9":  { "royal": 1, "marshal": 2, "vicemarshal": 1, "rebel": 3, "invader": 2 },
+    "10": { "royal": 1, "marshal": 2, "vicemarshal": 2, "rebel": 3, "invader": 2 }
+  }
+}
