@@ -2,6 +2,8 @@ import { GENERALS, SUPPLY, ROLE_COUNTS_BY_PLAYER_COUNT, INFANTRY } from '../data
 import { shuffle, newId, pick } from './util.js';
 import { promptMany } from './prompts.js';
 
+export const MAX_VICE_MARSHALS = 2;
+
 export function createRoom(code, hostPlayerId) {
   return {
     code,
@@ -38,7 +40,7 @@ export function createPlayer(id, name) {
     infantry: INFANTRY.startingCount,
     camp: [], // { instanceId, generalId }
     marshalIndex: 0,
-    viceMarshalIndex: null,
+    viceMarshalIndices: [], // up to 2 camp indices
     hand: [], // { instanceId, cardId }
     isHost: false
   };
@@ -54,10 +56,19 @@ export function activeGeneralId(player) {
   return entry ? entry.generalId : null;
 }
 
-export function viceGeneralId(player) {
-  if (player.viceMarshalIndex === null) return null;
-  const entry = player.camp[player.viceMarshalIndex];
-  return entry ? entry.generalId : null;
+export function viceGeneralIds(player) {
+  return player.viceMarshalIndices.map((idx) => player.camp[idx]?.generalId).filter(Boolean);
+}
+
+/** Safely removes a camp slot (e.g. a demoted Vice-Marshal), fixing up
+ * marshalIndex/viceMarshalIndices so they still point at the right entries. */
+export function removeCampEntry(player, campIndex) {
+  if (campIndex < 0 || campIndex >= player.camp.length) return null;
+  const [removed] = player.camp.splice(campIndex, 1);
+  const shift = (idx) => (idx > campIndex ? idx - 1 : idx);
+  if (player.marshalIndex > campIndex) player.marshalIndex = shift(player.marshalIndex);
+  player.viceMarshalIndices = player.viceMarshalIndices.filter((idx) => idx !== campIndex).map(shift);
+  return removed;
 }
 
 function buildSupplyDeck() {
@@ -142,7 +153,7 @@ export async function setupGame(ctx) {
     pool.push(unchosen);
     p.camp = [{ instanceId: newId('gen'), generalId: chosen }];
     p.marshalIndex = 0;
-    p.viceMarshalIndex = null;
+    p.viceMarshalIndices = [];
   });
   room.generalPool = shuffle(pool);
 
@@ -213,7 +224,7 @@ export function buildPlayerView(room, viewerId) {
     eliminated: p.eliminated,
     camp: p.camp,
     marshalIndex: p.marshalIndex,
-    viceMarshalIndex: p.viceMarshalIndex,
+    viceMarshalIndices: p.viceMarshalIndices,
     handCount: p.hand.length,
     hand: p.id === viewerId ? p.hand : undefined,
     hasRole: !!p.role,

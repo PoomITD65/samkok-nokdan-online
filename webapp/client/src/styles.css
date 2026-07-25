@@ -590,6 +590,45 @@ button {
   color: #b8a583;
 }
 
+/* Card inspector: docked panel on wide screens, popup modal on narrow ones. */
+.card-inspector-dock {
+  display: none;
+}
+.zoom-modal-mobile {
+  display: flex;
+}
+
+@media (min-width: 1500px) {
+  .card-inspector-dock {
+    display: block;
+    position: fixed;
+    top: 70px;
+    right: 16px;
+    width: 240px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    background: #241a12;
+    border: 1px solid #5a4630;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    z-index: 40;
+  }
+  .card-inspector-title {
+    font-size: 0.8rem;
+    color: #b8a583;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .card-inspector-body .zoom-img {
+    max-width: 100%;
+  }
+  .zoom-modal-mobile {
+    display: none;
+  }
+}
+
 .card-badge {
   position: absolute;
   bottom: 2px;

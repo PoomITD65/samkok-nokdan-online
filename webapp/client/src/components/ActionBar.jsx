@@ -72,7 +72,7 @@ export default function ActionBar({ state, me, lookups, isMyTurn }) {
         >
           {ACTION_LABELS.general_ability.label}
         </button>
-        <button className="btn action" disabled={busy || !canUse('swap') || me.viceMarshalIndex === null} onClick={() => doAction('swap')}>
+        <button className="btn action" disabled={busy || !canUse('swap') || !(me.viceMarshalIndices?.length > 0)} onClick={() => doAction('swap')}>
           {ACTION_LABELS.swap.label}
         </button>
         <button className="btn action" disabled={busy || !canUse('infantry_draw') || me.infantry < 1} onClick={() => doAction('infantry_draw')}>

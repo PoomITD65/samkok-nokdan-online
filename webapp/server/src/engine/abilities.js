@@ -1,13 +1,15 @@
 import {
   activeGeneralId,
-  viceGeneralId,
+  viceGeneralIds,
   drawCards,
   discardFromHand,
   log,
   broadcastState,
   alivePlayers,
   ensureDeck,
-  nextAlivePlayerId
+  nextAlivePlayerId,
+  removeCampEntry,
+  MAX_VICE_MARSHALS
 } from './state.js';
 import { promptOne, promptMany } from './prompts.js';
 import { GENERALS_BY_ID, SUPPLY_BY_ID } from '../data/index.js';
@@ -339,15 +341,22 @@ export async function performRecruit(ctx, player) {
   const newIndex = player.camp.length;
   player.camp.push({ instanceId: newId('gen'), generalId: chosenGeneral });
 
-  if (player.viceMarshalIndex === null) {
-    player.viceMarshalIndex = newIndex;
+  if (player.viceMarshalIndices.length < MAX_VICE_MARSHALS) {
+    player.viceMarshalIndices.push(newIndex);
   } else {
-    const swapRes = await promptOne(ctx, player.id, {
-      kind: 'yesNo',
-      messageTh: `ตั้ง ${GENERALS_BY_ID[chosenGeneral]?.name} เป็นรองแม่ทัพคนใหม่แทนคนเดิมหรือไม่? (ถ้าไม่ จะเก็บไว้ในค่ายเฉยๆ)`,
-      message: `Make ${GENERALS_BY_ID[chosenGeneral]?.nameEn || chosenGeneral} your new Vice-Marshal? (If not, they just sit in your camp as reserve.)`
+    const replaceRes = await promptOne(ctx, player.id, {
+      kind: 'chooseOption',
+      messageTh: `รองแม่ทัพเต็มแล้ว (สูงสุด ${MAX_VICE_MARSHALS} คน) — ตั้ง ${GENERALS_BY_ID[chosenGeneral]?.name} แทนคนเดิมคนไหน หรือเก็บไว้ในค่ายเฉยๆ?`,
+      message: `Vice-Marshal slots are full (max ${MAX_VICE_MARSHALS}) — replace which one with ${GENERALS_BY_ID[chosenGeneral]?.nameEn || chosenGeneral}, or keep them as reserve?`,
+      options: [...player.viceMarshalIndices.map((idx) => player.camp[idx].generalId), 'keep_as_reserve']
     }, 15000);
-    if (swapRes?.yes) player.viceMarshalIndex = newIndex;
+    const choice = replaceRes?.choice;
+    if (choice && choice !== 'keep_as_reserve') {
+      const replaceIdx = player.viceMarshalIndices.find((idx) => player.camp[idx].generalId === choice);
+      if (replaceIdx !== undefined) {
+        player.viceMarshalIndices = player.viceMarshalIndices.map((idx) => (idx === replaceIdx ? newIndex : idx));
+      }
+    }
   }
 
   log(room, `${player.name} จ้างขุนพล ${GENERALS_BY_ID[chosenGeneral]?.name} เข้าค่าย`, `${player.name} recruited ${GENERALS_BY_ID[chosenGeneral]?.nameEn || chosenGeneral} into their camp.`);
@@ -443,18 +452,28 @@ async function abilityDemandCard(ctx, player) {
   }
 
   if (!gave) {
+    const punishOptions = target.viceMarshalIndices.length > 0 ? ['infantry', 'demote_vice'] : ['infantry'];
     const punishRes = await promptOne(ctx, player.id, {
       kind: 'chooseOption',
       messageTh: `${target.name} ไม่ให้การ์ด! เลือกบทลงโทษ`,
       message: `${target.name} refused! Choose a punishment.`,
-      options: ['infantry', 'demote_vice']
+      options: punishOptions
     }, 15000);
-    if (punishRes?.choice === 'demote_vice' && target.viceMarshalIndex !== null) {
-      const gone = target.camp.splice(target.viceMarshalIndex, 1)[0];
+    if (punishRes?.choice === 'demote_vice' && target.viceMarshalIndices.length > 0) {
+      let demoteIdx = target.viceMarshalIndices[0];
+      if (target.viceMarshalIndices.length > 1) {
+        const pickRes = await promptOne(ctx, player.id, {
+          kind: 'chooseGeneral',
+          messageTh: `เลือกรองแม่ทัพของ ${target.name} ที่จะปลด`,
+          message: `Choose which of ${target.name}'s Vice-Marshals to demote.`,
+          options: target.viceMarshalIndices.map((idx) => target.camp[idx].generalId)
+        }, 15000);
+        const match = target.viceMarshalIndices.find((idx) => target.camp[idx].generalId === pickRes?.choice);
+        if (match !== undefined) demoteIdx = match;
+      }
+      const gone = removeCampEntry(target, demoteIdx);
       room.generalPool.push(gone.generalId);
       room.generalPool = shuffle(room.generalPool);
-      if (target.marshalIndex > target.viceMarshalIndex) target.marshalIndex -= 1;
-      target.viceMarshalIndex = null;
       log(room, `${target.name} ถูกนำรองแม่ทัพกลับกองขุนพล (ความสามารถตั๊กอิ๋ว)`, `${target.name}'s Vice-Marshal was returned to the general pool (Tuo Yiu).`);
     } else {
       await loseInfantry(ctx, target, 1);
@@ -525,14 +544,26 @@ async function abilitySearchTaiping(ctx, player) {
 }
 
 async function abilityBorrowViceAbility(ctx, player) {
-  const vgid = viceGeneralId(player);
-  if (!vgid || vgid === 'g4') return { ok: false, reason: 'no_valid_vice' };
-  const gen = GENERALS_BY_ID[vgid];
-  if (!gen || gen.icon !== 'action') {
-    return { ok: false, reason: 'vice_not_action_type' };
+  const candidates = viceGeneralIds(player)
+    .filter((gid) => gid !== 'g4')
+    .map((gid) => GENERALS_BY_ID[gid])
+    .filter((gen) => gen && gen.icon === 'action');
+
+  if (candidates.length === 0) return { ok: false, reason: 'no_valid_vice' };
+
+  let chosen = candidates[0];
+  if (candidates.length > 1) {
+    const res = await promptOne(ctx, player.id, {
+      kind: 'chooseGeneral',
+      messageTh: 'ความสามารถโยจิ๋น: เลือกความสามารถของรองแม่ทัพที่จะยืมใช้',
+      message: "He Jin: choose which Vice-Marshal's ability to borrow.",
+      options: candidates.map((gen) => gen.id)
+    }, 15000);
+    chosen = candidates.find((gen) => gen.id === res?.choice) || chosen;
   }
-  log(ctx.room, `${player.name} ใช้ความสามารถโยจิ๋น ยืมความสามารถของ ${gen.name} (รองแม่ทัพ)`, `${player.name} used He Jin's ability to borrow ${gen.nameEn || gen.name}'s ability.`);
-  return performGeneralAbilityAction(ctx, player, { asGeneralId: vgid });
+
+  log(ctx.room, `${player.name} ใช้ความสามารถโยจิ๋น ยืมความสามารถของ ${chosen.name} (รองแม่ทัพ)`, `${player.name} used He Jin's ability to borrow ${chosen.nameEn || chosen.name}'s ability.`);
+  return performGeneralAbilityAction(ctx, player, { asGeneralId: chosen.id });
 }
 
 export function isActionAbilityAvailable(player) {

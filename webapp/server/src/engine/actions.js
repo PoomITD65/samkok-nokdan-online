@@ -1,4 +1,5 @@
 import { activeGeneralId, nextAlivePlayerId, drawCards, log, broadcastState } from './state.js';
+import { promptOne } from './prompts.js';
 import { performAttack } from './combat.js';
 import {
   performRecruit,
@@ -96,7 +97,7 @@ export async function performAction(ctx, playerId, actionType, payload = {}) {
         }
         break;
       case 'swap':
-        result = doSwap(ctx, player);
+        result = await doSwap(ctx, player);
         break;
       case 'infantry_draw':
         result = await performInfantryDraw(ctx, player);
@@ -126,14 +127,27 @@ async function doAttack(ctx, player, payload) {
   return { ok: true, ...result };
 }
 
-function doSwap(ctx, player) {
+async function doSwap(ctx, player) {
   const { room } = ctx;
-  if (player.viceMarshalIndex === null || player.viceMarshalIndex === undefined) {
+  if (player.viceMarshalIndices.length === 0) {
     return { ok: false, reason: 'no_vice_marshal' };
   }
+  let chosenViceIdx = player.viceMarshalIndices[0];
+  if (player.viceMarshalIndices.length > 1) {
+    const res = await promptOne(ctx, player.id, {
+      kind: 'chooseGeneral',
+      messageTh: 'เลือกรองแม่ทัพที่จะสลับขึ้นเป็นแม่ทัพ',
+      message: 'Choose which Vice-Marshal to swap into the Marshal position.',
+      options: player.viceMarshalIndices.map((idx) => player.camp[idx].generalId)
+    }, 20000);
+    const pickedGeneralId = res?.choice;
+    const match = player.viceMarshalIndices.find((idx) => player.camp[idx].generalId === pickedGeneralId);
+    if (match !== undefined) chosenViceIdx = match;
+  }
+
   const oldMarshalIdx = player.marshalIndex;
-  player.marshalIndex = player.viceMarshalIndex;
-  player.viceMarshalIndex = oldMarshalIdx;
+  player.marshalIndex = chosenViceIdx;
+  player.viceMarshalIndices = player.viceMarshalIndices.map((idx) => (idx === chosenViceIdx ? oldMarshalIdx : idx));
   const gen = GENERALS_BY_ID[activeGeneralId(player)];
   log(room, `${player.name} สลับตำแหน่งแม่ทัพ-รองแม่ทัพ (แม่ทัพใหม่: ${gen?.name})`, `${player.name} swapped Marshal/Vice-Marshal (new Marshal: ${gen?.nameEn || gen?.name}).`);
   return { ok: true };

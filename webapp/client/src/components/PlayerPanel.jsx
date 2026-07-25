@@ -3,9 +3,12 @@ import CardImage from './CardImage.jsx';
 
 export default function PlayerPanel({ player, isMe, isCurrentTurn, lookups, onClick, selectable }) {
   const marshalEntry = player.camp[player.marshalIndex];
-  const viceEntry = player.viceMarshalIndex !== null ? player.camp[player.viceMarshalIndex] : null;
   const marshalGeneral = marshalEntry ? lookups.generalsById[marshalEntry.generalId] : null;
-  const viceGeneral = viceEntry ? lookups.generalsById[viceEntry.generalId] : null;
+  const viceGenerals = (player.viceMarshalIndices || [])
+    .map((idx) => player.camp[idx])
+    .filter(Boolean)
+    .map((entry) => lookups.generalsById[entry.generalId])
+    .filter(Boolean);
   const roleDef = player.role ? lookups.rolesById[player.role] : null;
   const infantry = lookups.infantry;
 
@@ -30,7 +33,9 @@ export default function PlayerPanel({ player, isMe, isCurrentTurn, lookups, onCl
       <div className="player-panel-body">
         <div className="general-slot">
           <CardImage src={marshalGeneral?.image} label={marshalGeneral?.name} text={marshalGeneral?.text} size="sm" badge="แม่ทัพ" />
-          {viceGeneral && <CardImage src={viceGeneral?.image} label={viceGeneral?.name} text={viceGeneral?.text} size="xs" badge="รอง" />}
+          {viceGenerals.map((vg) => (
+            <CardImage key={vg.id} src={vg.image} label={vg.name} text={vg.text} size="xs" badge="รอง" />
+          ))}
         </div>
         <div className="stat-column">
           <div className="stat-card-row">

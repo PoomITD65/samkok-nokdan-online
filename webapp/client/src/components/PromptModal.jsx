@@ -8,7 +8,8 @@ const OPTION_LABELS = {
   infantry: '🪖 ใช้/เสียทหารราบ',
   demote_vice: '⬇️ ปลดรองแม่ทัพกลับกองขุนพล',
   card: '🃏 ใช้การ์ดโจมตี',
-  nanhua: '📜 ทิ้งการ์ด 2 ใบ (เซียนหนานหัว)'
+  nanhua: '📜 ทิ้งการ์ด 2 ใบ (เซียนหนานหัว)',
+  keep_as_reserve: '📦 เก็บไว้ในค่ายเฉยๆ (ไม่ตั้งรองแม่ทัพใหม่)'
 };
 
 export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
@@ -112,11 +113,15 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
         const options = prompt.options || [];
         return (
           <div className="row-actions">
-            {options.map((opt) => (
-              <button key={opt} className="btn secondary" onClick={() => respond({ choice: opt })}>
-                {OPTION_LABELS[opt] || opt}
-              </button>
-            ))}
+            {options.map((opt) => {
+              const gen = lookups.generalsById[opt];
+              const optLabel = gen ? gen.name : OPTION_LABELS[opt] || opt;
+              return (
+                <button key={opt} className="btn secondary" onClick={() => respond({ choice: opt })}>
+                  {optLabel}
+                </button>
+              );
+            })}
           </div>
         );
       }
