@@ -1,43 +1,41 @@
-# General Ability Test Suite — Results
+# ผลทดสอบความสามารถขุนพลทั้ง 25 ตัว
 
-Unit tests that call the game engine's exported functions directly (no server,
-no sockets) with a mock prompt-answering `io`, so each general's ability can be
-verified in isolation and deterministically.
+Unit test ที่เรียกฟังก์ชันของ game engine ตรงๆ (ไม่ผ่านเซิร์ฟเวอร์ ไม่ผ่าน socket) โดยจำลอง prompt ให้ตอบอัตโนมัติตามสคริปต์ที่กำหนดไว้ ทำให้ทดสอบความสามารถแต่ละตัวได้แบบเจาะจงและแม่นยำ
 
-**Run it:** `node test_generals.mjs` (from the `webapp/` folder, no server needs to be running)
+**วิธีรัน:** `node test_generals.mjs` (รันจากโฟลเดอร์ `webapp/` ไม่ต้องเปิดเซิร์ฟเวอร์ก่อน)
 
-**Latest result: 25/25 passed**
+**ผลล่าสุด: ผ่าน 25/25**
 
-| # | General (TH) | General (EN) | What the test checks | Status |
-|---|---|---|---|---|
-| g1 | โจโฉ | Cao Cao | Reclaims a trick card from the discard pile on attack success | ✅ |
-| g2 | ซุนเกี๋ยน | Sun Jian | Continuous: any hand card can fuel an attack | ✅ |
-| g3 | เตียวเหลียง | Zhang Liang | Steals a random card from the defender on attack success | ✅ |
-| g4 | โยจิ๋น | Yo Jin (He Jin) | Passively grants Vice-Marshal abilities; action button only enables when a VM is action-type | ✅ |
-| g5 | ง่อฮูหยิน | Lady Wu | Continuous: immune to others' tricks, not her own | ✅ |
-| g6 | ม้าอ้วนยี่ | Ma Wan-yi | Punishes a card-user by discarding an Attack card | ✅ |
-| g7 | เล่าปี่ | Liu Bei | Recruits ANY general directly from the whole pool (no random-5) | ✅ |
-| g8 | เตียวเสี้ยน | Diao Chan | Redirects an attack onto another player | ✅ |
-| g9 | ลิโป้ | Lü Bu | Deals 2 infantry loss instead of 1 on a successful attack (full `performAttack`) | ✅ |
-| g10 | โลติด | Luo Zhi | Allows a trick card to be used in place of a Defense card | ✅ |
-| g11 | ตั๋งโต๊ะ | Dong Zhuo | Continuous: free attack vs. camps of 2 or fewer generals | ✅ |
-| g12 | กองซุนจ้าน | Gongsun Zan | Action ability = spend 1 infantry, draw 2 (mirrors the base infantry ability) | ✅ |
-| g13 | กวนอู | Guan Yu | Reveals defender's hand; extra loss + discard if an Attack card is found | ✅ |
-| g14 | เตียวหุย | Zhang Fei | Draws 2 cards on attack success | ✅ |
-| g15 | แฮหัวต้น | Xiahou Dun | Retaliates for 2 infantry when attacked and losing infantry | ✅ |
-| g16 | ชุนยก | Xun You | Replaces the normal draw with "look at top 2, take 1" | ✅ |
-| g17 | ตั๊กอิ๋ว | Tuo Yiu | Demands a card; refusal costs the target 1 infantry (chosen punishment) | ✅ |
-| g18 | เตียวเหยียง | Zhang Rang | Continuous: immune to infantry-fueled attacks | ✅ |
-| g19 | ชุนฮิว | Xun Yu | Draws 2 if the turn ends with no action taken | ✅ |
-| g20 | เขาเฉียว | Khao Qiao | Reorders the top 3 deck cards correctly (rank 1 = drawn first) | ✅ |
-| g21 | เซียนหนานหัว | Sage of Nanhua | Alternate revival cost (discard 2 cards instead of spending infantry) | ✅ |
-| g22 | ฮองฮูสง | Huangfu Song | Extra loss + draw, ONLY when the attack was fueled by infantry | ✅ |
-| g23 | จูล่ง | Zhao Yun | Attacks again immediately on success (once per turn) | ✅ |
-| g24 | เตียวก๊ก | Zhang Jiao | Mandatory trick-card return, then chooses among multiple Taiping matches | ✅ |
-| g25 | ซุนกวน | Sun Quan | Draws on attack success AND on any infantry loss (not just combat) | ✅ |
+| # | ขุนพล | สิ่งที่ทดสอบ | ผล |
+|---|---|---|---|
+| g1 | โจโฉ | หยิบการ์ดอุบาย 1 ใบจากกองใช้แล้วขึ้นมือ เมื่อโจมตีสำเร็จ | ✅ |
+| g2 | ซุนเกี๋ยน | พาสซีฟ: ใช้การ์ดใดก็ได้ในมือเป็นเชื้อโจมตีแทนการ์ดโจมตี | ✅ |
+| g3 | เตียวเหลียง | สุ่มขโมยการ์ด 1 ใบจากคู่ต่อสู้ เมื่อโจมตีสำเร็จ | ✅ |
+| g4 | โยจิ๋น | มอบสิทธิ์ใช้ความสามารถรองแม่ทัพแบบพาสซีฟ / ปุ่มกดใช้จะเปิดเฉพาะตอนมีรองแม่ทัพแบบ action เท่านั้น | ✅ |
+| g5 | ง่อฮูหยิน | พาสซีฟ: ภูมิคุ้มกันการ์ดอุบายของคนอื่น (ยกเว้นของตัวเอง) | ✅ |
+| g6 | ม้าอ้วนยี่ | ลงโทษคนใช้การ์ดด้วยการทิ้งการ์ดโจมตี | ✅ |
+| g7 | เล่าปี่ | จ้างขุนพลตัวไหนก็ได้จากกองขุนพลทั้งหมดโดยตรง (ไม่ต้องสุ่ม 5 คน) | ✅ |
+| g8 | เตียวเสี้ยน | โยนการโจมตีไปให้ผู้เล่นคนอื่นแทน | ✅ |
+| g9 | ลิโป้ | ทำ 2 ดาเมจแทน 1 เมื่อโจมตีสำเร็จ (ทดสอบผ่าน `performAttack` เต็มรูปแบบ) | ✅ |
+| g10 | โลติด | ใช้การ์ดอุบายแทนการ์ดป้องกันได้ | ✅ |
+| g11 | ตั๋งโต๊ะ | พาสซีฟ: โจมตีฟรีใส่ค่ายที่มีขุนพล ≤ 2 คน | ✅ |
+| g12 | กองซุนจ้าน | ความสามารถ action = เสียทหารราบ 1 เพื่อจั่วการ์ด 2 ใบ (เหมือนความสามารถทหารราบพื้นฐาน) | ✅ |
+| g13 | กวนอู | เปิดมือคู่ต่อสู้ดู ถ้าเจอการ์ดโจมตีจะเสียเพิ่ม 1 พร้อมทิ้งการ์ดนั้น | ✅ |
+| g14 | เตียวหุย | จั่วการ์ด 2 ใบ เมื่อโจมตีสำเร็จ | ✅ |
+| g15 | แฮหัวต้น | ตอบโต้ 2 ดาเมจ เมื่อถูกโจมตีจนเสียทหารราบ | ✅ |
+| g16 | ชุนยก | แทนการจั่วปกติด้วย "ดูบน 2 ใบ เลือก 1 ใบ" | ✅ |
+| g17 | ตั๊กอิ๋ว | ขอการ์ด 1 ใบ ถ้าปฏิเสธเสียทหารราบ 1 (ตามบทลงโทษที่เลือก) | ✅ |
+| g18 | เตียวเหยียง | พาสซีฟ: ภูมิคุ้มกันการโจมตีด้วยทหารราบ | ✅ |
+| g19 | ชุนฮิว | จั่วการ์ด 2 ใบ ถ้าจบตาโดยไม่ได้ทำอะไรเลย | ✅ |
+| g20 | เขาเฉียว | จัดเรียงการ์ดบนสุด 3 ใบใหม่ถูกต้อง (อันดับ 1 = จั่วก่อน) | ✅ |
+| g21 | เซียนหนานหัว | วิธีฟื้นทหารราบแบบสำรอง (ทิ้งการ์ด 2 ใบแทนการเสียทหารราบ) | ✅ |
+| g22 | ฮองฮูสง | เสียเพิ่ม 1 + จั่ว 1 ใบ **เฉพาะ**ตอนโจมตีด้วยทหารราบเท่านั้น | ✅ |
+| g23 | จูล่ง | โจมตีซ้ำได้ทันทีเมื่อสำเร็จ (จำกัดตาละ 1 ครั้ง) | ✅ |
+| g24 | เตียวก๊ก | คืนการ์ดอุบายภาคบังคับ แล้วเลือกจากการ์ดไท่ผิงที่เจอได้หลายใบ | ✅ |
+| g25 | ซุนกวน | จั่วการ์ดทั้งตอนโจมตีสำเร็จ และตอนเสียทหารราบไม่ว่าสาเหตุใด | ✅ |
 
-## Notes
+## หมายเหตุ
 
-- These are **unit tests** for the ability logic itself — they complement (not replace) `bot_test.mjs`, which exercises the full game loop (setup, turns, prompts, win conditions) through real sockets with randomized bot play.
-- Several of these tests lock in fixes found during manual play-testing this session: the Khao Qiao reorder-direction bug, Zhang Jiao's optional-vs-mandatory cost, Sun Quan's combat-only vs. any-cause infantry trigger, and Yo Jin's passive-vs-button-press redesign.
-- Re-run this suite after touching anything in `server/src/engine/` to catch regressions quickly.
+- นี่คือ **unit test** เฉพาะ logic ความสามารถ ไม่ได้แทนที่ `bot_test.mjs` ที่ทดสอบทั้งเกมจริง (setup, เทิร์น, prompt, เงื่อนไขชนะ) ผ่าน socket จริงด้วยบอทสุ่ม — ใช้เสริมกัน
+- หลายเทสในนี้ช่วยล็อคบั๊กที่เจอระหว่างเล่นทดสอบจริงไว้ไม่ให้กลับมาอีก เช่น การจัดเรียงการ์ดกลับด้านของเขาเฉียว, ต้นทุนที่ควรบังคับของเตียวก๊ก, เงื่อนไขเสียทหารราบของซุนกวน, และการออกแบบใหม่ของโยจิ๋น (พาสซีฟ vs ต้องกดปุ่ม)
+- แนะนำให้รันชุดนี้ซ้ำทุกครั้งที่แก้โค้ดใน `server/src/engine/` เพื่อเช็คว่าไม่มีอะไรพังตามมา
