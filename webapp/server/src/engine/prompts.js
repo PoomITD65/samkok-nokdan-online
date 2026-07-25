@@ -78,7 +78,12 @@ export function promptMany(ctx, eligiblePlayerIds, spec, timeoutMs = 60000) {
       min: spec.min ?? null,
       max: spec.max ?? null,
       context: spec.context || null,
-      cancellable: !!spec.cancellable
+      cancellable: !!spec.cancellable,
+      // Reactive card windows (Ambush/Incite Army/Counter-Scheme): eligibility
+      // IS the set of players holding that specific card, so this must never
+      // be broadcast to the whole room — only sent privately to each eligible
+      // player's own socket below. See state.js's waitingOn filter too.
+      private: !!spec.private
     };
     room.pendingPrompts.push(promptRecord);
 
@@ -88,13 +93,15 @@ export function promptMany(ctx, eligiblePlayerIds, spec, timeoutMs = 60000) {
         io.to(p.socketId).emit('prompt:show', promptRecord);
       }
     }
-    io.to(room.code).emit('prompt:broadcast', {
-      id: promptId,
-      kind: spec.kind,
-      message: spec.message,
-      messageTh: spec.messageTh,
-      eligiblePlayerIds
-    });
+    if (!promptRecord.private) {
+      io.to(room.code).emit('prompt:broadcast', {
+        id: promptId,
+        kind: spec.kind,
+        message: spec.message,
+        messageTh: spec.messageTh,
+        eligiblePlayerIds
+      });
+    }
     broadcastState(ctx);
   });
 }

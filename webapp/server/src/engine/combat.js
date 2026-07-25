@@ -132,6 +132,7 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
           {
             kind: 'playInciteArmy',
             firstResponseWins: true,
+            private: true,
             messageTh: `${attacker.name} เพิ่งลงการ์ดโจมตี — มีใครต้องการเล่น "ปลุกปั่นกองทัพ" เพื่อบังคับให้ลงการ์ดโจมตีใบที่สองหรือไม่?`,
             message: `${attacker.name} just played an Attack card — does anyone want to play "Incite the Army" to force a second Attack card?`
           },
@@ -235,6 +236,7 @@ async function resolveDefense(ctx, attacker, target, allowTrickAsDefense, depth 
       {
         kind: 'playAmbush',
         firstResponseWins: true,
+        private: true,
         messageTh: `${target.name} เพิ่งป้องกันสำเร็จ — มีใครต้องการเล่น "ลอบโจมตี" เพื่อยกเลิกการป้องกันนี้หรือไม่?`,
         message: `${target.name} just defended — does anyone want to play "Ambush" to cancel that defense?`
       },

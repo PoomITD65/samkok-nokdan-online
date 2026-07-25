@@ -23,6 +23,7 @@ export async function offerCounterTrick(ctx, aboutToResolveCardId) {
     {
       kind: 'playCounterTrick',
       firstResponseWins: true,
+      private: true,
       messageTh: `มีการ์ดอุบาย (${SUPPLY_BY_ID[aboutToResolveCardId]?.name}) กำลังจะทำงาน — ใครต้องการเล่น "ซ้อนกลข้าศึก" เพื่อยกเลิกหรือไม่?`,
       message: `A trick card (${SUPPLY_BY_ID[aboutToResolveCardId]?.nameEn}) is about to resolve — does anyone want to play "Counter-Scheme" to negate it?`
     },

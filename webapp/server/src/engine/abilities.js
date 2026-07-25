@@ -51,6 +51,7 @@ async function hook_g8_diaochan(ctx, attacker, defender) {
   if (!hasAttackCard || others.length === 0) return {};
   const res = await promptOne(ctx, defender.id, {
     kind: 'yesNo',
+    private: true, // only shown because defender holds an Attack card — don't reveal that to onlookers
     messageTh: 'ใช้ความสามารถเตียวเสี้ยน? ทิ้งการ์ดโจมตี 1 ใบ เพื่อให้ผู้เล่นอื่นรับการโจมตีนี้แทนคุณ',
     message: 'Use Diao Chan\'s ability? Discard an Attack card to redirect this attack to another player.'
   }, 15000);
@@ -212,6 +213,7 @@ async function hook_g15_xiahoudun(ctx, defender, attacker) {
   if (!atkCard || !defCard) return;
   const res = await promptOne(ctx, defender.id, {
     kind: 'yesNo',
+    private: true, // only shown because defender holds both an Attack and a Defense card
     messageTh: `ใช้ความสามารถแฮหัวต้น? ทิ้งการ์ดโจมตี+ป้องกันอย่างละ 1 ใบ เพื่อให้ ${attacker.name} เสียทหารราบ 2 คน`,
     message: `Use Xiahou Dun's ability? Discard 1 Attack + 1 Defense card to make ${attacker.name} lose 2 infantry.`
   }, 15000);
@@ -272,6 +274,7 @@ export async function fireOnAnyCardUse(ctx, actingPlayer) {
     if (!atkCard || actingPlayer.eliminated) continue;
     const res = await promptOne(ctx, watcher.id, {
       kind: 'yesNo',
+      private: true, // the prompt itself reveals watcher currently holds an Attack card
       messageTh: `ใช้ความสามารถม้าอ้วนยี่? ทิ้งการ์ดโจมตี 1 ใบ เพื่อให้ ${actingPlayer.name} เสียทหารราบ 1 คน`,
       message: `Use Ma Wan-yi's ability? Discard an Attack card to make ${actingPlayer.name} lose 1 infantry.`
     }, 10000);

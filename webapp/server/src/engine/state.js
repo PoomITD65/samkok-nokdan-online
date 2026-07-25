@@ -267,8 +267,13 @@ export function buildPlayerView(room, viewerId) {
     generalPoolCount: room.generalPool.length,
     continuousTricks: room.continuousTricks,
     myPrompts: room.pendingPrompts.filter((p) => p.eligiblePlayerIds.includes(viewerId)),
+    // Reactive card windows (Ambush/Incite Army/Counter-Scheme) are marked
+    // `private` because their eligiblePlayerIds list IS the set of players
+    // holding that specific card — showing it to non-holders would leak
+    // hidden hand information in a bluffing game. Those are omitted here
+    // entirely rather than shown as a generic "someone is deciding" banner.
     waitingOn: room.pendingPrompts
-      .filter((p) => !p.eligiblePlayerIds.includes(viewerId))
+      .filter((p) => !p.eligiblePlayerIds.includes(viewerId) && !p.private)
       .map((p) => ({
         id: p.id,
         messageTh: p.messageTh,
