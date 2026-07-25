@@ -13,7 +13,9 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: { origin: true }
+  cors: { origin: true },
+  pingInterval: 8000,
+  pingTimeout: 8000
 });
 
 app.get('/api/gamedata', (req, res) => {

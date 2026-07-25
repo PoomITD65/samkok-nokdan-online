@@ -61,6 +61,30 @@ export default function App() {
     };
   }, []);
 
+  // Safety net: real-time pushes (Socket.IO) are the primary path, but phones
+  // that lock the screen or flaky WiFi can silently drop/delay the underlying
+  // socket without the UI knowing. Re-pull the authoritative state whenever
+  // the tab regains focus/visibility, and as a periodic background poll.
+  useEffect(() => {
+    if (!myPlayerId) return;
+    async function resync() {
+      if (!socket.connected) return;
+      const res = await emitAsync('room:state', {});
+      if (res?.ok) setState(res.state);
+    }
+    function onVisible() {
+      if (document.visibilityState === 'visible') resync();
+    }
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', resync);
+    const interval = setInterval(resync, 4000);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', resync);
+      clearInterval(interval);
+    };
+  }, [myPlayerId]);
+
   const handleJoined = useCallback((res) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ roomCode: res.roomCode, playerId: res.playerId }));
     setMyPlayerId(res.playerId);
