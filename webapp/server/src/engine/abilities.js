@@ -525,7 +525,9 @@ async function abilityPeekTop3(ctx, player) {
   const byId = Object.fromEntries(top.map((c) => [c.instanceId, c]));
   order = order.filter((id) => byId[id]);
   for (const id of top.map((c) => c.instanceId)) if (!order.includes(id)) order.push(id);
-  for (const id of order) room.deck.push(byId[id]);
+  // The deck is drawn via pop() (last element = top of deck / drawn first), so
+  // order[0] ("rank 1 / top of deck" per the UI) must be pushed LAST.
+  for (const id of [...order].reverse()) room.deck.push(byId[id]);
   log(room, `${player.name} ใช้ความสามารถเขาเฉียว จัดเรียงการ์ดบนสุดของกองเสบียงใหม่`, `${player.name} peeked and reordered the top of the deck (Khao Qiao).`);
   broadcastState(ctx);
   return { ok: true };
@@ -533,31 +535,36 @@ async function abilityPeekTop3(ctx, player) {
 
 async function abilitySearchTaiping(ctx, player) {
   const { room } = ctx;
+  // Card text has no "if you have one" qualifier — returning a trick card is
+  // the mandatory cost of this ability, not an optional step. No trick card
+  // in hand means the ability simply can't be used.
   const tricksInHand = player.hand.filter((c) => SUPPLY_BY_ID[c.cardId]?.type === 'trick');
-  if (tricksInHand.length > 0) {
-    const res = await promptOne(ctx, player.id, {
-      kind: 'chooseCards',
-      messageTh: 'ความสามารถเตียวก๊ก: เลือกการ์ดอุบาย 1 ใบจากมือ นำกลับเข้ากองเสบียง',
-      message: 'Zhang Jiao: choose 1 trick card from your hand to return to the deck.',
-      options: tricksInHand.map((c) => c.instanceId),
-      min: 0,
-      max: 1
-    }, 15000);
-    const cardId = res?.choice;
-    if (cardId) {
-      const idx = player.hand.findIndex((c) => c.instanceId === cardId);
-      const [card] = player.hand.splice(idx, 1);
-      room.deck.unshift(card);
-    }
-  }
-  const idx = room.deck.findIndex((c) => SUPPLY_BY_ID[c.cardId]?.tag === 'taiping');
-  if (idx === -1) {
+  if (tricksInHand.length === 0) return { ok: false, reason: 'no_trick_to_return' };
+
+  const res = await promptOne(ctx, player.id, {
+    kind: 'chooseCards',
+    messageTh: 'ความสามารถเตียวก๊ก: เลือกการ์ดอุบาย 1 ใบจากมือ นำกลับเข้ากองเสบียง (จำเป็นต้องเลือก)',
+    message: 'Zhang Jiao: choose 1 trick card from your hand to return to the deck (required).',
+    options: tricksInHand.map((c) => c.instanceId),
+    min: 1,
+    max: 1,
+    cancellable: true
+  }, 15000);
+  if (res?.cancel) return { ok: false, reason: 'cancelled' };
+  const cardId = res?.choice;
+  if (!cardId) return { ok: false, reason: 'cancelled' };
+  const idx = player.hand.findIndex((c) => c.instanceId === cardId);
+  const [card] = player.hand.splice(idx, 1);
+  room.deck.unshift(card);
+
+  const idx2 = room.deck.findIndex((c) => SUPPLY_BY_ID[c.cardId]?.tag === 'taiping');
+  if (idx2 === -1) {
     log(room, `${player.name} ใช้ความสามารถเตียวก๊ก แต่ไม่พบการ์ดไท่ผิงในกองเสบียง`, `${player.name} used Zhang Jiao's ability, but no Taiping card was found in the deck.`);
     broadcastState(ctx);
     return { ok: false };
   }
-  const [card] = room.deck.splice(idx, 1);
-  player.hand.push(card);
+  const [foundCard] = room.deck.splice(idx2, 1);
+  player.hand.push(foundCard);
   log(room, `${player.name} ใช้ความสามารถเตียวก๊ก ค้นหาการ์ดไท่ผิงขึ้นมือ`, `${player.name} searched the deck for a Taiping card (Zhang Jiao).`);
   broadcastState(ctx);
   return { ok: true };

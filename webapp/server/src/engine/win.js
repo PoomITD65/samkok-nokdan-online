@@ -4,6 +4,14 @@ function roleFactionDefeated(room, roleId) {
   return ![...room.players.values()].some((p) => p.role === roleId && !p.eliminated);
 }
 
+/** roleFactionDefeated() is true "vacuously" when a role was never dealt at all
+ * (e.g. Vice-Marshal doesn't exist in a 4-player game) — this checks whether
+ * the role actually exists this game, so win conditions built on "X is
+ * defeated" don't fire for a faction that was never in play. */
+function roleExists(room, roleId) {
+  return [...room.players.values()].some((p) => p.role === roleId);
+}
+
 function findRoyal(room) {
   return [...room.players.values()].find((p) => p.role === 'royal');
 }
@@ -39,10 +47,16 @@ export function checkWinConditions(room) {
         return declareWin(room, 'royal+marshal', 'ราชสำนักและแม่ทัพชนะ! กำจัดโจรกบฏและพวกนอกด่านได้หมดแล้ว', 'The Royal Court (and Marshal) win — Rebels and Invaders have been wiped out!', ['royal', 'marshal']);
       }
     }
-    if (marshalDefeated && rebelDefeated && royalAlive) {
+    if (roleExists(room, 'vicemarshal') && marshalDefeated && rebelDefeated && royalAlive) {
       return declareWin(room, 'vicemarshal', 'รองแม่ทัพชนะ! กำจัดแม่ทัพและโจรกบฏได้หมดแล้ว โดยราชสำนักยังอยู่', 'The Vice-Marshal wins — Marshal and Rebels eliminated, Royal Court survives!');
     }
-    if (marshalDefeated && viceDefeated && rebelDefeated) {
+    if (
+      roleExists(room, 'marshal') &&
+      roleExists(room, 'vicemarshal') &&
+      marshalDefeated &&
+      viceDefeated &&
+      rebelDefeated
+    ) {
       return declareWin(room, 'invader', 'พวกนอกด่านชนะ! กำจัดแม่ทัพ รองแม่ทัพ และโจรกบฏได้หมดแล้ว', 'The Outside-the-Pass Invaders win — Marshal, Vice-Marshal and Rebels all eliminated!');
     }
   }
