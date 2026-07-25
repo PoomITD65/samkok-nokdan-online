@@ -112,17 +112,27 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
 
       case 'chooseCards': {
         let cards;
+        let disabledIds;
         if (prompt.context?.source === 'inline') {
           const cardIds = prompt.context?.cards || [];
           cards = (prompt.options || []).map((instanceId, i) => ({ instanceId, cardId: cardIds[i] }));
         } else {
           const source = prompt.context?.source === 'discard' ? state.discard || [] : me?.hand || [];
-          cards = (prompt.options || []).map((id) => source.find((c) => c.instanceId === id)).filter(Boolean);
+          if (prompt.context?.showFullPile) {
+            // Show the whole pile for context (e.g. Cao Cao's ability), but
+            // only the offered `options` are actually pickable.
+            cards = source;
+            const optionSet = new Set(prompt.options || []);
+            disabledIds = source.filter((c) => !optionSet.has(c.instanceId)).map((c) => c.instanceId);
+          } else {
+            cards = (prompt.options || []).map((id) => source.find((c) => c.instanceId === id)).filter(Boolean);
+          }
         }
         return (
           <CardPicker
             cards={cards}
             lookups={lookups}
+            disabledIds={disabledIds}
             min={prompt.min ?? 0}
             max={prompt.max ?? 1}
             onConfirm={(ids) => respond({ choice: ids[0] || null, choices: ids })}

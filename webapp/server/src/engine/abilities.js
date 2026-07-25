@@ -98,17 +98,20 @@ async function hook_g1_caocao(ctx, attacker) {
   if (tricks.length === 0) return;
   const res = await promptOne(ctx, attacker.id, {
     kind: 'chooseCards',
-    messageTh: 'ความสามารถโจโฉ: เลือกการ์ดอุบาย 1 ใบจากกองใช้แล้วขึ้นมือ',
-    message: 'Cao Cao: pick 1 trick card from the discard pile into your hand.',
+    messageTh: 'ความสามารถโจโฉ: เลือกการ์ดอุบาย 1 ใบจากกองใช้แล้วขึ้นมือ (แสดงกองใช้แล้วทั้งหมดให้ดูเป็นข้อมูล ใบที่เลือกไม่ได้จะจาง)',
+    message: 'Cao Cao: pick 1 trick card from the discard pile into your hand (the whole pile is shown for context; non-trick cards are dimmed and can\'t be picked).',
     options: tricks.map((c) => c.instanceId),
     min: 0,
     max: 1,
-    context: { source: 'discard' }
+    context: { source: 'discard', showFullPile: true }
   }, 15000);
   const chosen = res?.choice;
   if (!chosen) return;
   const idx = ctx.room.discard.findIndex((c) => c.instanceId === chosen);
   if (idx === -1) return;
+  // Defense in depth: only ever grant an actual trick card, even if a client
+  // somehow submitted an instanceId outside the offered `options` list.
+  if (SUPPLY_BY_ID[ctx.room.discard[idx].cardId]?.type !== 'trick') return;
   const [card] = ctx.room.discard.splice(idx, 1);
   attacker.hand.push(card);
   log(ctx.room, `${attacker.name} ใช้ความสามารถโจโฉ นำการ์ดอุบายจากกองใช้แล้วขึ้นมือ`, `${attacker.name} used Cao Cao's ability to reclaim a trick card.`);
