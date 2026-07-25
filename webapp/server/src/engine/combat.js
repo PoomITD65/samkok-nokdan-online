@@ -181,9 +181,9 @@ export async function performAttack(ctx, attacker, target, fuel, cardInstanceId 
     break;
   }
 
-  const success = await resolveDefense(ctx, attacker, finalTarget, allowTrickAsDefense);
+  const defended = await resolveDefense(ctx, attacker, finalTarget, allowTrickAsDefense);
 
-  if (!success) {
+  if (defended) {
     log(room, `${finalTarget.name} ป้องกันการโจมตีสำเร็จ`, `${finalTarget.name} successfully defended!`);
     broadcastState(ctx);
     return { success: false };
