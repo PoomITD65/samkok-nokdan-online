@@ -322,7 +322,7 @@ export async function fireOnTurnEndNoAction(ctx, player) {
 // Shared action implementations (used by both the base action slots AND by
 // "action"-icon general abilities that duplicate a base action).
 // ---------------------------------------------------------------------------
-export async function performRecruit(ctx, player) {
+export async function performRecruit(ctx, player, opts = {}) {
   const { room } = ctx;
   if (player.hand.length < 3) return { ok: false, reason: 'not_enough_cards' };
   const res = await promptOne(ctx, player.id, {
@@ -344,17 +344,32 @@ export async function performRecruit(ctx, player) {
     return { ok: false, reason: 'empty_pool' };
   }
 
-  const draw = pick(room.generalPool, Math.min(5, room.generalPool.length));
-  const pickRes = await promptOne(ctx, player.id, {
-    kind: 'chooseGeneral',
-    messageTh: 'เลือกขุนพล 1 คนจาก 5 คนนี้ เพื่อเข้าค่ายของคุณ',
-    message: 'Choose 1 of these 5 Generals to join your camp.',
-    options: draw
-  }, 25000);
-  const chosenGeneral = pickRes?.choice && draw.includes(pickRes.choice) ? pickRes.choice : draw[0];
+  let chosenGeneral;
+  if (opts.openPool) {
+    // Liu Bei's own card text has no "random draw of 5" qualifier (unlike the
+    // base action) — he gets to hand-pick anyone from the whole pool.
+    const candidatePool = room.generalPool.slice();
+    const pickRes = await promptOne(ctx, player.id, {
+      kind: 'chooseGeneral',
+      messageTh: 'ความสามารถเล่าปี่: เลือกขุนพลคนใดก็ได้จากกองขุนพลทั้งหมด เพื่อเข้าค่ายของคุณ',
+      message: "Liu Bei's ability: choose ANY general from the whole pool to join your camp.",
+      options: candidatePool
+    }, 30000);
+    chosenGeneral = pickRes?.choice && candidatePool.includes(pickRes.choice) ? pickRes.choice : candidatePool[0];
+    room.generalPool = room.generalPool.filter((g) => g !== chosenGeneral);
+  } else {
+    const draw = pick(room.generalPool, Math.min(5, room.generalPool.length));
+    const pickRes = await promptOne(ctx, player.id, {
+      kind: 'chooseGeneral',
+      messageTh: 'เลือกขุนพล 1 คนจาก 5 คนนี้ เพื่อเข้าค่ายของคุณ',
+      message: 'Choose 1 of these 5 Generals to join your camp.',
+      options: draw
+    }, 25000);
+    chosenGeneral = pickRes?.choice && draw.includes(pickRes.choice) ? pickRes.choice : draw[0];
 
-  const remainingPool = room.generalPool.filter((g) => !draw.includes(g));
-  room.generalPool = shuffle(remainingPool.concat(draw.filter((g) => g !== chosenGeneral)));
+    const remainingPool = room.generalPool.filter((g) => !draw.includes(g));
+    room.generalPool = shuffle(remainingPool.concat(draw.filter((g) => g !== chosenGeneral)));
+  }
 
   const newIndex = player.camp.length;
   player.camp.push({ instanceId: newId('gen'), generalId: chosenGeneral });
@@ -420,7 +435,7 @@ export async function performGeneralAbilityAction(ctx, player, opts = {}) {
   const gid = opts.asGeneralId || activeGeneralId(player);
   switch (gid) {
     case 'g7':
-      return performRecruit(ctx, player);
+      return performRecruit(ctx, player, { openPool: true });
     case 'g12':
       return performInfantryDraw(ctx, player);
     case 'g17':
