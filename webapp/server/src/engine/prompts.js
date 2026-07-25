@@ -77,7 +77,8 @@ export function promptMany(ctx, eligiblePlayerIds, spec, timeoutMs = 60000) {
       options: spec.options || null,
       min: spec.min ?? null,
       max: spec.max ?? null,
-      context: spec.context || null
+      context: spec.context || null,
+      cancellable: !!spec.cancellable
     };
     room.pendingPrompts.push(promptRecord);
 

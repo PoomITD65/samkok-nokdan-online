@@ -138,8 +138,10 @@ async function doSwap(ctx, player) {
       kind: 'chooseGeneral',
       messageTh: 'เลือกรองแม่ทัพที่จะสลับขึ้นเป็นแม่ทัพ',
       message: 'Choose which Vice-Marshal to swap into the Marshal position.',
-      options: player.viceMarshalIndices.map((idx) => player.camp[idx].generalId)
+      options: player.viceMarshalIndices.map((idx) => player.camp[idx].generalId),
+      cancellable: true
     }, 20000);
+    if (res?.cancel) return { ok: false, reason: 'cancelled' };
     const pickedGeneralId = res?.choice;
     const match = player.viceMarshalIndices.find((idx) => player.camp[idx].generalId === pickedGeneralId);
     if (match !== undefined) chosenViceIdx = match;

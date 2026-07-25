@@ -24,6 +24,15 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
 
   const title = prompt.messageTh || prompt.message;
 
+  function CancelButton() {
+    if (!prompt.cancellable) return null;
+    return (
+      <button className="btn ghost cancel-btn" onClick={() => respond({ cancel: true })}>
+        ✕ ยกเลิก (ไม่นับเป็นการกระทำ)
+      </button>
+    );
+  }
+
   return (
     <div className="modal-overlay">
       <div className="modal-panel">
@@ -64,34 +73,40 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
       case 'chooseTarget': {
         const options = (prompt.options || []).map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
         return (
-          <div className="target-grid">
-            {options.map((p) => (
-              <button key={p.id} className="target-btn" onClick={() => respond({ choice: p.id })}>
-                {p.name}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="target-grid">
+              {options.map((p) => (
+                <button key={p.id} className="target-btn" onClick={() => respond({ choice: p.id })}>
+                  {p.name}
+                </button>
+              ))}
+            </div>
+            <CancelButton />
+          </>
         );
       }
 
       case 'chooseGeneral': {
         const options = prompt.options || [];
         return (
-          <div className="card-picker-grid">
-            {options.map((gid) => {
-              const gen = lookups.generalsById[gid];
-              return (
-                <CardImage
-                  key={gid}
-                  src={gen?.image}
-                  label={gen?.name}
-                  text={gen?.text}
-                  size="lg"
-                  onClick={() => respond({ choice: gid })}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className="card-picker-grid">
+              {options.map((gid) => {
+                const gen = lookups.generalsById[gid];
+                return (
+                  <CardImage
+                    key={gid}
+                    src={gen?.image}
+                    label={gen?.name}
+                    text={gen?.text}
+                    size="lg"
+                    onClick={() => respond({ choice: gid })}
+                  />
+                );
+              })}
+            </div>
+            <CancelButton />
+          </>
         );
       }
 
@@ -105,6 +120,7 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
             min={prompt.min ?? 0}
             max={prompt.max ?? 1}
             onConfirm={(ids) => respond({ choice: ids[0] || null, choices: ids })}
+            onCancel={prompt.cancellable ? () => respond({ cancel: true }) : undefined}
           />
         );
       }
@@ -148,7 +164,12 @@ export default function PromptModal({ prompt, state, myPlayerId, lookups }) {
         const ids = prompt.options || [];
         const cardIds = prompt.context?.cards || [];
         const items = ids.map((instanceId, i) => ({ instanceId, cardId: cardIds[i] }));
-        return <ReorderPicker items={items} lookups={lookups} onConfirm={(order) => respond({ order })} />;
+        return (
+          <>
+            <ReorderPicker items={items} lookups={lookups} onConfirm={(order) => respond({ order })} />
+            <CancelButton />
+          </>
+        );
       }
 
       case 'revivalOffer': {

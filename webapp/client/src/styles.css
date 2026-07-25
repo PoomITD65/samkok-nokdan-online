@@ -731,6 +731,11 @@ button {
   gap: 8px;
   margin-bottom: 12px;
 }
+.cancel-btn {
+  margin-top: 10px;
+  border-color: #6b2b2b;
+  color: #f5b7b1;
+}
 .card-picker-actions {
   display: flex;
   gap: 8px;

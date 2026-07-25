@@ -314,9 +314,10 @@ export async function performRecruit(ctx, player) {
     message: 'Choose 3 cards to discard to recruit a General.',
     options: player.hand.map((c) => c.instanceId),
     min: 3,
-    max: 3
+    max: 3,
+    cancellable: true
   }, 25000);
-  const chosen = res?.choices || [];
+  const chosen = res?.cancel ? [] : res?.choices || [];
   if (chosen.length !== 3) return { ok: false, reason: 'cancelled' };
   for (const id of chosen) discardFromHand(room, player, id);
 
@@ -425,10 +426,11 @@ async function abilityDemandCard(ctx, player) {
     kind: 'chooseTarget',
     messageTh: 'เลือกผู้เล่นที่จะขอการ์ด 1 ใบ',
     message: 'Choose a player to demand a card from.',
-    options: others.map((p) => p.id)
+    options: others.map((p) => p.id),
+    cancellable: true
   }, 15000);
   const target = room.players.get(targetRes?.choice);
-  if (!target) return { ok: false };
+  if (!target) return { ok: false, reason: 'cancelled' };
 
   let gave = false;
   if (target.hand.length > 0) {
@@ -557,8 +559,10 @@ async function abilityBorrowViceAbility(ctx, player) {
       kind: 'chooseGeneral',
       messageTh: 'ความสามารถโยจิ๋น: เลือกความสามารถของรองแม่ทัพที่จะยืมใช้',
       message: "He Jin: choose which Vice-Marshal's ability to borrow.",
-      options: candidates.map((gen) => gen.id)
+      options: candidates.map((gen) => gen.id),
+      cancellable: true
     }, 15000);
+    if (res?.cancel) return { ok: false, reason: 'cancelled' };
     chosen = candidates.find((gen) => gen.id === res?.choice) || chosen;
   }
 
