@@ -298,7 +298,8 @@ export async function fireOnTurnStart(ctx, player) {
       message: 'Xun You: choose 1 of these 2 cards to keep, the other goes to the bottom of the deck.',
       options: top2.map((c) => c.instanceId),
       min: 1,
-      max: 1
+      max: 1,
+      context: { source: 'inline', cards: top2.map((c) => c.cardId) }
     }, 20000);
     const chosenId = res?.choice || top2[0].instanceId;
     const chosen = top2.find((c) => c.instanceId === chosenId) || top2[0];
