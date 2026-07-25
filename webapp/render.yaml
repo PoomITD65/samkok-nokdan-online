@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: samkok-nokdan-online
+    env: node
+    region: singapore
+    plan: free
+    rootDir: webapp
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
