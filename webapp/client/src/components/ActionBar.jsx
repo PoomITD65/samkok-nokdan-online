@@ -25,7 +25,7 @@ export default function ActionBar({ state, me, lookups, isMyTurn }) {
   const slotsLeft = 2 - used.length;
   const myActiveGeneralId = me.camp?.[me.marshalIndex]?.generalId;
   const activeGen = lookups.generalsById[myActiveGeneralId];
-  const generalAbilityAvailable = activeGen?.icon === 'action';
+  const generalAbilityAvailable = !!activeGen?.actionSlotEligible;
 
   const canUse = (type) => slotsLeft > 0 && !used.includes(type);
 

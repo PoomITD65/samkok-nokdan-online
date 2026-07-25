@@ -609,7 +609,7 @@ async function abilityBorrowViceAbility(ctx, player) {
   const candidates = viceGeneralIds(player)
     .filter((gid) => gid !== 'g4')
     .map((gid) => GENERALS_BY_ID[gid])
-    .filter((gen) => gen && gen.icon === 'action');
+    .filter((gen) => gen && gen.actionSlotEligible);
 
   if (candidates.length === 0) return { ok: false, reason: 'no_valid_vice' };
 
@@ -633,5 +633,5 @@ async function abilityBorrowViceAbility(ctx, player) {
 export function isActionAbilityAvailable(player) {
   const gid = activeGeneralId(player);
   const gen = gid && GENERALS_BY_ID[gid];
-  return !!gen && gen.icon === 'action';
+  return !!gen && !!gen.actionSlotEligible;
 }

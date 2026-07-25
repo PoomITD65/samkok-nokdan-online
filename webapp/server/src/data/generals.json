@@ -31,8 +31,9 @@
     "name": "โยจิ๋น",
     "nameEn": "He Jin",
     "image": "/assets/cards/generals/g4.jpg",
-    "icon": "action",
-    "_iconNote": "Photographed icon looked like the passive/continuous symbol, but the ability text ('we MAY use...only on our turn') clearly reads as an optional per-turn action, so it's implemented as the action-slot type. Worth checking the real card if you have it.",
+    "icon": "continuous",
+    "actionSlotEligible": true,
+    "_iconNote": "Confirmed continuous (∞) from a clear photo. The ability is still invoked via the 'general_ability' action slot in-game — the ∞ icon here means the PERMISSION to borrow a Vice-Marshal's ability is passive/always available, not that it fires automatically without being chosen. (actionSlotEligible is the flag the code actually checks, decoupled from the display icon.)",
     "text": "เราสามารถใช้ความสามารถของรองแม่ทัพตัวใดก็ได้ของเรา (ความสามารถนี้ใช้ได้เฉพาะตาเราเท่านั้น)",
     "textEn": "We may use the ability of any Vice-Marshal general in our camp (only on our own turn)."
   },
@@ -60,6 +61,7 @@
     "nameEn": "Liu Bei",
     "image": "/assets/cards/generals/g7.jpg",
     "icon": "action",
+    "actionSlotEligible": true,
     "text": "เราทิ้งการ์ดบนมือ 3 ใบ ▸ เลือกนำขุนพลในกองขุนพลมาอยู่ในค่ายเรา 1 คน",
     "textEn": "Discard 3 cards from hand; choose 1 general from the general pool to bring into our camp."
   },
@@ -105,6 +107,7 @@
     "nameEn": "Gongsun Zan",
     "image": "/assets/cards/generals/g12.jpg",
     "icon": "action",
+    "actionSlotEligible": true,
     "text": "นำการ์ดทหารราบออก 1 ใบ ▸ เราจั่วการ์ดจากกองเสบียง 2 ใบ",
     "textEn": "Remove 1 of our own infantry; draw 2 cards from the supply deck."
   },
@@ -150,6 +153,7 @@
     "nameEn": null,
     "image": "/assets/cards/generals/g17.jpg",
     "icon": "action",
+    "actionSlotEligible": true,
     "text": "ขอการ์ด 1 ใบจากผู้เล่น 1 คน ▸ ถ้าผู้เล่นนั้นไม่ให้การ์ดเรา ▸ ผู้เล่นนั้นเสียทหารราบ 1 คน หรือ นำรองแม่ทัพ 1 คนของผู้เล่นนั้นกลับกองขุนพล",
     "textEn": "Demand 1 card from a chosen player; if refused, that player loses 1 infantry OR one of their Vice-Marshal generals returns to the pool."
   },
@@ -177,6 +181,7 @@
     "nameEn": null,
     "image": "/assets/cards/generals/g20.jpg",
     "icon": "action",
+    "actionSlotEligible": true,
     "text": "เราดูการ์ด 3 ใบบนสุดของกองเสบียง ▸ เลือกสลับตำแหน่งการ์ด 3 ใบนั้น ▸ นำการ์ด 3 นั้นวางกลับบนสุดของกองเสบียง",
     "textEn": "Look at top 3 cards of the deck, reorder them as desired, place back on top."
   },
@@ -213,6 +218,7 @@
     "nameEn": "Zhang Jiao",
     "image": "/assets/cards/generals/g24.jpg",
     "icon": "action",
+    "actionSlotEligible": true,
     "text": "นำการ์ดอุบายในมือ 1 ใบกลับเข้ากองเสบียง ▸ เลือกนำการ์ดอุบายที่ติดชื่อไท่ผิงจากกองเสบียงขึ้นมือเรา 1 ใบ",
     "textEn": "Return 1 trick card from hand into the deck; search the deck for a 'Taiping'-named trick card into hand."
   },
